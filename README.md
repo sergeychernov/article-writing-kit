@@ -38,10 +38,21 @@ This repo was bootstrapped with starter skills and agents. Replace or remove the
 
 | Kind | ID | Purpose |
 |------|-----|---------|
+| skill | `article-init` | Script-driven initialization for an Obsidian-friendly article workspace |
+| skill | `article-scaffold` | Wizard-style article folder scaffolding with resumable state |
 | skill | `hello` | Smoke-test skill for installations |
 | skill | `article-outline` | Outline a long-form article |
 | agent | `editor` | Review and tighten prose |
 | agent | `researcher` | Gather facts and sources |
+
+## Local testing
+
+After installing the skills as **Project** in ide-agents, run this inside a target writing repo:
+
+```bash
+node .cursor/skills/article-init/scripts/init-workspace.mjs --dry-run
+node .cursor/skills/article-scaffold/scripts/scaffold-resume.mjs --new --json
+```
 
 ## Next steps
 

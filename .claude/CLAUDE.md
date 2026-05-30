@@ -5,7 +5,19 @@ This repo is a **skills and agents catalog** for ide-agents.
 ## Layout
 
 - `skills/<name>/SKILL.md` — skills with YAML frontmatter (`name`, `description`, `scope`)
-- `agents/<name>.md` — optional agent prompts
+- `skills/<name>/scripts/` — optional Node `.mjs` generators (stable scans, JSON reports)
+- `skills/<name>/assets/` — optional JSON/markers scripts read
+- `agents/<name>.md` — agent orchestrators (workflow + output format)
+
+## Agents and scripts
+
+Do **not** implement multi-step repo scanners or report generators inline in agent markdown. Put them in `skills/<skill-id>/scripts/` and have agents run:
+
+```bash
+node <SKILL_DIR>/scripts/<script>.mjs
+```
+
+Then read stdout (`--json`) or documented output files. See repo-audit-skills for reference (`detect-stack.mjs`, `run-audit.mjs`).
 
 ## When editing
 

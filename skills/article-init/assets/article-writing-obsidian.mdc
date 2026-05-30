@@ -1,0 +1,47 @@
+---
+description: Obsidian-friendly structure for long-form article workspaces
+globs: **/*.md
+alwaysApply: false
+---
+
+# Article Workspace Rules
+
+Each article lives in its own folder. Apply these rules relative to that folder.
+
+## Files
+
+- `index.md` is the publishable entry point: frontmatter, article title, and embeds only.
+- `lead.md` is the short opening hook.
+- `act-1-*.md`, `act-2-*.md`, and `act-3-*.md` contain the article body.
+- `three-act-outline.md` is the working outline and may contain editorial notes.
+- `draft.md` is optional and is used only when the author wants a single rough draft.
+- `images/` contains screenshots, diagrams, and other article assets.
+
+## Obsidian Conventions
+
+- Assemble the article in `index.md` with embeds:
+  - `![[lead]]`
+  - `![[act-1-setup]]`
+  - `![[act-2-investigation]]`
+  - `![[act-3-resolution]]`
+- Use wiki links for internal navigation, for example `[[three-act-outline]]`.
+- Use Obsidian image embeds while writing, for example `![[images/diagram.png]]`.
+- Use regular Markdown image links only when exporting outside Obsidian.
+
+## Outline
+
+Use `three-act-outline.md` for:
+
+- short article formula;
+- brief act-by-act structure;
+- recommended block order;
+- working purpose for each act;
+- facts and details that must survive edits;
+- key question for each act;
+- act endings, turns, and resolution notes.
+
+## Content Rules
+
+- Preserve the narrative arc: pain -> investigation/complication -> resolution.
+- Keep publishable prose separate from planning notes.
+- Move summaries, editorial comments, and ordering notes into `three-act-outline.md`, not `index.md`.

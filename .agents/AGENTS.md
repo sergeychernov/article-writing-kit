@@ -5,7 +5,10 @@ This repository holds **Agent Skills** and **agents** consumed by ide-agents.
 ## Expected layout
 
 ```
-skills/<skill-id>/SKILL.md
+skills/<skill-id>/
+├── SKILL.md
+├── scripts/       # optional — *.mjs generators (stdlib, ESM)
+└── assets/        # optional — JSON config for scripts
 agents/<agent-id>.md
 ```
 
@@ -26,6 +29,8 @@ Project installs symlink into `<project>/.agents/skills/<name>`.
 ## Agents
 
 Markdown files in `agents/` with optional frontmatter. Project installs use `.agents/agents/<name>.md`.
+
+Agents define **role and workflow** only. Repeatable generators (stack detection, audits, structured reports) go in `skills/<skill-id>/scripts/` — agents invoke `node <SKILL_DIR>/scripts/….mjs` instead of improvising the same logic in chat. Pattern: [repo-audit-skills](https://github.com/sergeychernov/repo-audit-skills).
 
 ## Editing rules
 

@@ -1,0 +1,56 @@
+---
+description: Agent authoring — orchestration, reports, and script-backed generators
+globs: agents/**/*.md
+alwaysApply: false
+---
+
+# Agent authoring
+
+Agents in `agents/*.md` are **orchestrators**: they define role, workflow, and output format. They are not a place for ad-hoc code generation.
+
+## Generators → `scripts/`
+
+For anything that must be **stable, repeatable, and testable** (scanners, profile builders, report writers, stack detectors), put logic in bundled scripts under the **related skill folder**:
+
+```
+skills/<skill-id>/
+├── SKILL.md
+├── scripts/          # node *.mjs — run these, do not re-implement in chat
+└── assets/           # optional JSON/markers the scripts read
+```
+
+Pattern from [repo-audit-skills](https://github.com/sergeychernov/repo-audit-skills):
+
+- `skills/audit-init/scripts/detect-stack.mjs` — read-only scan, writes structured JSON
+- `skills/audit-debt/scripts/run-audit.mjs` — reads profile, runs checks, writes report
+
+### Why agents call scripts
+
+| In chat (avoid) | In `scripts/` (prefer) |
+|-----------------|------------------------|
+| Re-parsing repo layout each turn | Same repo state → same output |
+| Drifting flags and file paths | Documented CLI in script header |
+| Large inline bash one-liners | `#!/usr/bin/env node`, ESM `.mjs` |
+
+Agent body should tell the model to **resolve `<SKILL_DIR>`**, run `node <SKILL_DIR>/scripts/<name>.mjs`, then **read the artifact** (stdout JSON or a known output path). See `scripts.mdc` for script conventions.
+
+## Agent file format
+
+Optional YAML frontmatter: `description`, `scope` (defaults to `any`).
+
+Body structure:
+
+1. **Role** — one paragraph
+2. **Inputs** — what the user or upstream skill must provide
+3. **Workflow** — numbered steps; step that runs a script must include the exact `node …mjs` command
+4. **Output contract** — fixed sections (e.g. summary, findings, gaps); use consistent severity markers if reporting issues
+
+## Do not
+
+- Embed multi-step filesystem scans or JSON schema logic in the agent markdown
+- Write into the target project except paths documented by the skill (e.g. `.audit/`)
+- Duplicate script behavior in prose — link to `SKILL.md` quick start instead
+
+## Shared helpers
+
+Cross-skill utilities may live in `skills/_shared/` (e.g. `generated-by.mjs`). Import from scripts via relative paths; agents reference the skill that owns the script.

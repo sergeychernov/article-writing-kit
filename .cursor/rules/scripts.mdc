@@ -1,0 +1,101 @@
+---
+description: Conventions for skill scripts (generators, scanners, report writers)
+globs: skills/**/scripts/**
+alwaysApply: false
+---
+
+# Skill scripts
+
+Bundled under `skills/<skill-id>/scripts/`. Invoked by skills and agents — not installed separately by ide-agents.
+
+Reference implementation: [repo-audit-skills](https://github.com/sergeychernov/repo-audit-skills) (`detect-stack.mjs`, `run-audit.mjs`, modular `checks/`).
+
+## Runtime
+
+- ESM: `*.mjs`, `#!/usr/bin/env node`
+- Node 18+, **zero npm dependencies** in scripts (stdlib only)
+- Resolve skill assets via `import.meta.url` — never assume cwd for skill paths
+
+```javascript
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const here = dirname(fileURLToPath(import.meta.url));
+const assetsDir = join(here, '..', 'assets');
+```
+
+## Target repo discovery
+
+Scripts run **from anywhere inside the user's project** (after skill symlink install). Discover the audited repo root explicitly:
+
+```javascript
+import { execSync } from 'node:child_process';
+
+const repoRoot = execSync('git rev-parse --show-toplevel', { encoding: 'utf8' }).trim();
+process.chdir(repoRoot);
+```
+
+Exit `1` with a clear message if not a git repo.
+
+## File header (required)
+
+Every entry script documents usage at the top:
+
+```javascript
+#!/usr/bin/env node
+// my-skill: one-line purpose
+//
+// Usage (from anywhere inside a git repo):
+//   node <SKILL_DIR>/scripts/my-script.mjs
+//   node <SKILL_DIR>/scripts/my-script.mjs --json
+//   node <SKILL_DIR>/scripts/my-script.mjs --dry-run
+```
+
+`<SKILL_DIR>` is the installed skill folder path (global or project symlink).
+
+## CLI flags (standard)
+
+| Flag | Effect |
+|------|--------|
+| `--json` | Machine-readable stdout |
+| `--dry-run` | Run logic without writing output files |
+| `--force` | Overwrite existing generated files (when applicable) |
+
+Add skill-specific flags (`--offline`, `--verbose`, …) only when documented in the header.
+
+## Scan and write rules
+
+- Prefer `git ls-files` over unbounded filesystem walks
+- **Read-only** toward source files in the target repo by default
+- Writable outputs only under paths the skill documents (e.g. `.audit/profile.json`, `.audit/reports/*.json`)
+- Static config and schemas stay in `skills/<id>/assets/` — edit markers here, not in the target project
+- No network calls in scan scripts unless the skill explicitly requires it
+
+## Output
+
+- Human mode: short labeled summary for the terminal
+- JSON mode: stable schema for agents to parse
+- JSON files: 2-space indent, trailing newline
+- Stamp artifacts with `generatedBy`, `version`, `generatedAt` when writing reports
+
+## Layout inside a skill
+
+```
+skills/<name>/
+├── SKILL.md
+├── scripts/
+│   ├── run-*.mjs       # entry points
+│   ├── load-*.mjs      # shared loaders
+│   └── checks/         # optional modular checks
+└── assets/             # JSON registries, markers, schemas
+```
+
+Split large generators into `scripts/checks/` modules (see `audit-debt/scripts/checks/`).
+
+## SKILL.md integration
+
+Each skill with scripts must include in `SKILL.md`:
+
+1. Folder tree showing `scripts/` and `assets/`
+2. **Quick start** — copy-pasteable `node <SKILL_DIR>/scripts/….mjs`
+3. **Agent instructions** — resolve skill dir, run script, read output

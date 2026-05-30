@@ -12,7 +12,10 @@ This repository is an **ide-agents skill catalog** — not an application codeba
 | Path | Purpose |
 |------|---------|
 | `skills/<id>/SKILL.md` | Installable skills (required `SKILL.md` per folder) |
-| `agents/<id>.md` | Optional subagent definitions |
+| `skills/<id>/scripts/` | Optional bundled generators (`*.mjs`) — see `scripts.mdc` |
+| `skills/<id>/assets/` | Optional JSON/markers read by scripts |
+| `skills/_shared/` | Optional cross-skill helpers (imported by scripts) |
+| `agents/<id>.md` | Subagent orchestrators — call scripts, do not re-implement generators |
 | `.cursor/rules/` | Cursor project rules (this file) |
 
 ## SKILL.md conventions
@@ -25,6 +28,11 @@ This repository is an **ide-agents skill catalog** — not an application codeba
 
 - One markdown file per agent in `agents/`.
 - Optional frontmatter: `description`, `scope`.
+- Agents **orchestrate**; deterministic generators live in `skills/<id>/scripts/` (see `agents.mdc`).
+
+## Scripts (generators)
+
+Stable scanners and report writers belong in `skills/<skill-id>/scripts/`, not inline in agent prompts. Follow `scripts.mdc` (ESM `.mjs`, stdlib only, `--json` / `--dry-run`, resolve paths via `import.meta.url`).
 
 ## Do not
 
