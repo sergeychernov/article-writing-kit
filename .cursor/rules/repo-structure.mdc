@@ -1,0 +1,37 @@
+---
+description: Skills and agents repository layout for ide-agents catalogs
+alwaysApply: true
+---
+
+# Repository structure
+
+This repository is an **ide-agents skill catalog** — not an application codebase.
+
+## Directories
+
+| Path | Purpose |
+|------|---------|
+| `skills/<id>/SKILL.md` | Installable skills (required `SKILL.md` per folder) |
+| `agents/<id>.md` | Optional subagent definitions |
+| `.cursor/rules/` | Cursor project rules (this file) |
+
+## SKILL.md conventions
+
+- YAML frontmatter: `name`, `description`, `scope` (`global`, `project`, or `any`).
+- Body: instructions the IDE agent follows when the skill is invoked.
+- One skill per directory under `skills/`.
+
+## Agents
+
+- One markdown file per agent in `agents/`.
+- Optional frontmatter: `description`, `scope`.
+
+## Do not
+
+- Put application source code here unless it supports the catalog itself.
+- Rename skill folders casually — `artifactId` in ide-agents matches the directory name.
+- Remove `SKILL.md` from a skill folder (scan ignores directories without it).
+
+## Installing
+
+Use [ide-agents](https://github.com/sergeychernov/ide-agents): add this repo, then toggle **Global** or **Project** on Skills / Agents pages.
