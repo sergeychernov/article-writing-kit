@@ -37,7 +37,141 @@ export const ARTICLE_FILES = [
     },
 ];
 
+export const BRIEF_FIELDS = [
+    {
+        id: 'topic',
+        kind: 'text',
+        labels: { en: 'Topic', ru: 'Тема' },
+        questions: {
+            en: 'What is the article topic?',
+            ru: 'О чем будет статья?',
+        },
+    },
+    {
+        id: 'goal',
+        kind: 'text',
+        labels: { en: 'Goal', ru: 'Цель' },
+        questions: {
+            en: 'Why are you writing this article?',
+            ru: 'Зачем ты пишешь эту статью?',
+        },
+    },
+    {
+        id: 'repository',
+        kind: 'repository',
+        optionalWhen: 'repositoryContext',
+        labels: { en: 'Relevant Repositories', ru: 'Релевантные репозитории' },
+        questions: {
+            en: 'Are there relevant repositories for this article? Send one or more HTTPS/SSH URLs, or answer "no".',
+            ru: 'Для статьи существуют релевантные репозитории? Пришли одну или несколько ссылок HTTPS/SSH, либо ответь «нет».',
+        },
+    },
+    {
+        id: 'audience',
+        kind: 'text',
+        labels: { en: 'Audience', ru: 'Аудитория' },
+        questions: {
+            en: 'Who is the target audience?',
+            ru: 'Для кого эта статья?',
+        },
+    },
+    {
+        id: 'publicationTargets',
+        kind: 'list',
+        labels: { en: 'Publication Targets', ru: 'Площадки публикации' },
+        questions: {
+            en: 'Where do you plan to publish it?',
+            ru: 'Где ты планируешь её публиковать?',
+        },
+    },
+    {
+        id: 'readerTakeaway',
+        kind: 'text',
+        labels: { en: 'Reader Takeaway', ru: 'Что унесет читатель' },
+        questions: {
+            en: 'What should the reader take away?',
+            ru: 'Что читатель должен унести после прочтения?',
+        },
+    },
+    {
+        id: 'constraints',
+        kind: 'text',
+        labels: { en: 'Constraints', ru: 'Ограничения и важные детали' },
+        questions: {
+            en: 'What constraints or must-keep details should future agents respect?',
+            ru: 'Какие ограничения или важные детали будущие агенты должны сохранить?',
+        },
+    },
+];
+
+const BRIEF_BLOCK_START = '<!-- article-kit:brief:start -->';
+const BRIEF_BLOCK_END = '<!-- article-kit:brief:end -->';
+
+const SCAFFOLD_QUESTIONS = {
+    slug: {
+        en: 'What folder slug should be used for the article?',
+        ru: 'Какой slug использовать для папки статьи?',
+    },
+    title: {
+        en: 'What is the article title?',
+        ru: 'Какой заголовок статьи записать в index.md?',
+    },
+};
+
+const REPOSITORY_CONTEXT_PATTERNS = [
+    /\bgithub\b/i,
+    /\bgitlab\b/i,
+    /\bbitbucket\b/i,
+    /\brepository\b/i,
+    /\brepo\b/i,
+    /\bopen[-\s]?source\b/i,
+    /\btool\b/i,
+    /\bcli\b/i,
+    /\bsdk\b/i,
+    /\bapi\b/i,
+    /\bplugin\b/i,
+    /\bpackage\b/i,
+    /\blibrary\b/i,
+    /\bframework\b/i,
+    /\bextension\b/i,
+    /\bskills?\b/i,
+    /\bagents?\b/i,
+    /\bcursor\b/i,
+    /\bcodex\b/i,
+    /\bclaude(?:\s+code)?\b/i,
+    /инструмент/i,
+    /репозитор/i,
+    /опенсорс/i,
+    /\bopen source\b/i,
+    /скилл/i,
+    /агент/i,
+    /пакет/i,
+    /библиотек/i,
+    /фреймворк/i,
+    /плагин/i,
+    /расширени[ея]/i,
+    /утилит/i,
+];
+
+const NO_REPOSITORY_ANSWERS = new Set([
+    'no',
+    'nope',
+    'none',
+    'n/a',
+    'na',
+    'not now',
+    'нет',
+    'не',
+    'нету',
+    'нет ссылки',
+    'без репозитория',
+    'не знаю',
+]);
+
 const STATE_VERSION = 1;
+const STATE_SCHEMA_VERSION = 1;
+const STATE_SCHEMA_URL =
+    'https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-scaffold/assets/schemas/scaffold-state.schema.json';
 
 const CYRILLIC = {
     а: 'a',
@@ -80,11 +214,15 @@ export function parseArgs(args) {
         target: process.cwd(),
         slug: null,
         title: null,
+        threadTitle: null,
+        context: [],
         language: null,
         dryRun: false,
         force: false,
         json: false,
         newArticle: false,
+        field: null,
+        value: null,
         help: false,
     };
 
@@ -103,6 +241,14 @@ export function parseArgs(args) {
             opts.json = true;
         } else if (arg === '--new') {
             opts.newArticle = true;
+        } else if (arg === '--field') {
+            opts.field = requireValue(args, ++i, '--field');
+        } else if (arg.startsWith('--field=')) {
+            opts.field = valueFromEquals(arg, '--field');
+        } else if (arg === '--value') {
+            opts.value = requireValue(args, ++i, '--value');
+        } else if (arg.startsWith('--value=')) {
+            opts.value = valueFromEquals(arg, '--value');
         } else if (arg === '--target') {
             opts.target = requireValue(args, ++i, '--target');
         } else if (arg.startsWith('--target=')) {
@@ -117,6 +263,16 @@ export function parseArgs(args) {
             opts.title = requireValue(args, ++i, '--title');
         } else if (arg.startsWith('--title=')) {
             opts.title = valueFromEquals(arg, '--title');
+        } else if (arg === '--thread-title' || arg === '--chat-title') {
+            opts.threadTitle = requireValue(args, ++i, arg);
+        } else if (arg.startsWith('--thread-title=')) {
+            opts.threadTitle = valueFromEquals(arg, '--thread-title');
+        } else if (arg.startsWith('--chat-title=')) {
+            opts.threadTitle = valueFromEquals(arg, '--chat-title');
+        } else if (arg === '--context') {
+            opts.context.push(requireValue(args, ++i, '--context'));
+        } else if (arg.startsWith('--context=')) {
+            opts.context.push(valueFromEquals(arg, '--context'));
         } else if (arg === '--language') {
             opts.language = requireValue(args, ++i, '--language');
         } else if (arg.startsWith('--language=')) {
@@ -133,8 +289,12 @@ export function parseArgs(args) {
 
     opts.target = resolve(opts.target);
     if (opts.title !== null) opts.title = cleanTitle(opts.title);
+    if (opts.threadTitle !== null) opts.threadTitle = cleanTitle(opts.threadTitle);
+    opts.context = opts.context.map((item) => String(item).trim()).filter(Boolean);
     if (opts.language !== null) opts.language = cleanLanguage(opts.language);
     if (opts.slug !== null) opts.slug = normalizeSlug(opts.slug);
+    if (opts.field !== null) opts.field = String(opts.field).trim();
+    if (opts.value !== null) opts.value = String(opts.value).trim();
 
     return opts;
 }
@@ -180,16 +340,29 @@ export function cleanLanguage(input) {
     return language;
 }
 
+function recoverSlugFromThreadTitle(target, threadTitle) {
+    const slug = threadTitle ? normalizeSlug(threadTitle) : null;
+    if (!slug) return null;
+
+    const articleDir = safeArticleDir(target, slug);
+    if (!existsSync(articleDir)) return null;
+    if (!statSync(articleDir).isDirectory()) return null;
+
+    return slug;
+}
+
 export function buildContext(opts, config = {}) {
     const targetStatus = getTargetStatus(opts.target, opts.dryRun);
     const discoveredStates = listStates(opts.target);
     const resumableStates = discoveredStates.filter(isResumableState);
+    const threadSlug = recoverSlugFromThreadTitle(opts.target, opts.threadTitle);
+    const autoResumeStates = config.autoResumeApplied ? discoveredStates : resumableStates;
     const autoState =
-        !opts.newArticle && !opts.slug && config.autoResumeSingle && resumableStates.length === 1
-            ? resumableStates[0]
+        !opts.newArticle && !opts.slug && config.autoResumeSingle && autoResumeStates.length === 1
+            ? autoResumeStates[0]
             : null;
 
-    const seedSlug = opts.slug ?? autoState?.slug ?? null;
+    const seedSlug = opts.slug ?? threadSlug ?? autoState?.slug ?? null;
     const state = seedSlug ? readState(opts.target, seedSlug) : autoState;
     const slug = seedSlug ?? state?.slug ?? null;
     const articleDir = slug ? safeArticleDir(opts.target, slug) : null;
@@ -202,7 +375,8 @@ export function buildContext(opts, config = {}) {
         slug,
         title,
         titleForSlug: title ?? opts.title,
-        choiceStates: opts.newArticle ? [] : resumableStates,
+        choiceStates: opts.newArticle ? [] : config.choiceAllStates ? discoveredStates : resumableStates,
+        language,
     });
     const questions = allQuestions.slice(0, 1);
     const missing = questions.map((q) => q.id);
@@ -215,6 +389,9 @@ export function buildContext(opts, config = {}) {
         dryRun: opts.dryRun,
         force: opts.force,
         newArticle: opts.newArticle,
+        threadTitle: opts.threadTitle,
+        context: opts.context,
+        recoveredSlug: threadSlug,
         slug,
         title,
         language,
@@ -308,11 +485,114 @@ export function applyScaffold(opts) {
     });
 }
 
+export function resumeBrief(opts) {
+    const ctx = buildContext(opts, {
+        autoResumeSingle: true,
+        autoResumeApplied: true,
+        choiceAllStates: true,
+    });
+    return withBriefNextStep(publicBriefContext(ctx));
+}
+
+export function statusBrief(opts) {
+    const ctx = buildContext(opts, {
+        autoResumeSingle: true,
+        autoResumeApplied: true,
+        choiceAllStates: true,
+    });
+    return withBriefNextStep(publicBriefContext(ctx));
+}
+
+export function answerBrief(opts) {
+    const ctx = buildContext(opts, {
+        autoResumeSingle: true,
+        autoResumeApplied: true,
+        choiceAllStates: true,
+    });
+    const report = publicBriefContext(ctx);
+
+    if (!ctx.ready) {
+        return withBriefNextStep(report);
+    }
+
+    if (!opts.field) {
+        throw new Error('--field is required');
+    }
+    if (opts.value === null) {
+        throw new Error('--value is required');
+    }
+
+    const field = findBriefField(opts.field);
+    const value = parseBriefValue(field, opts.value);
+    const brief = normalizeBrief(ctx.state?.brief);
+    brief[field.id] = value;
+
+    if (!opts.dryRun) {
+        writeBriefAnswer(ctx, field, value);
+    }
+
+    const nextCtx = opts.dryRun
+        ? {
+              ...ctx,
+              state: {
+                  ...(ctx.state ?? {}),
+                  slug: ctx.slug,
+                  title: ctx.title,
+                  language: ctx.language,
+                  brief,
+              },
+          }
+        : buildContext(
+              {
+                  ...opts,
+                  slug: ctx.slug,
+                  title: ctx.title,
+                  language: ctx.language,
+              },
+              {
+                  autoResumeSingle: true,
+                  autoResumeApplied: true,
+                  choiceAllStates: true,
+              },
+          );
+
+    return withBriefNextStep({
+        ...publicBriefContext(nextCtx),
+        action: opts.dryRun ? 'would_save_answer' : 'answer_saved',
+        saved: {
+            field: field.id,
+            value,
+        },
+        markdown: syncBriefToOutline(nextCtx, opts),
+    });
+}
+
+export function syncBriefMarkdown(opts) {
+    const ctx = buildContext(opts, {
+        autoResumeSingle: true,
+        autoResumeApplied: true,
+        choiceAllStates: true,
+    });
+    const report = publicBriefContext(ctx);
+
+    if (!ctx.ready || Object.keys(report.brief ?? {}).length === 0) {
+        return withBriefNextStep(report);
+    }
+
+    return withBriefNextStep({
+        ...report,
+        action: opts.dryRun ? 'would_sync' : 'synced',
+        markdown: syncBriefToOutline(ctx, opts),
+    });
+}
+
 function publicContext(ctx) {
     const complete = ctx.ready && ctx.fileStatus?.complete === true;
 
     return {
         skill: ctx.skill,
+        stateSchema: STATE_SCHEMA_URL,
+        stateSchemaVersion: STATE_SCHEMA_VERSION,
         target: ctx.target,
         targetStatus: ctx.targetStatus,
         dryRun: ctx.dryRun,
@@ -320,7 +600,9 @@ function publicContext(ctx) {
         newArticle: ctx.newArticle,
         slug: ctx.slug,
         title: ctx.title,
-        suggestedThreadTitle: ctx.title,
+        suggestedThreadTitle: ctx.slug,
+        threadTitle: ctx.threadTitle,
+        recoveredSlug: ctx.recoveredSlug,
         language: ctx.language,
         articleDir: ctx.articleDir,
         state: summarizeState(ctx.state),
@@ -331,6 +613,26 @@ function publicContext(ctx) {
         currentQuestion: ctx.questions[0] ?? null,
         ready: ctx.ready,
         complete,
+    };
+}
+
+function publicBriefContext(ctx) {
+    const brief = normalizeBrief(ctx.state?.brief);
+    const briefQuestions = ctx.ready ? buildBriefQuestions(brief, ctx).slice(0, 1) : [];
+    const briefComplete = ctx.ready && buildBriefQuestions(brief, ctx).length === 0;
+    const action = !ctx.ready ? 'needs_scaffold_input' : briefComplete ? 'brief_complete' : 'needs_input';
+
+    return {
+        ...publicContext(ctx),
+        phase: 'brief',
+        action,
+        structureComplete: ctx.ready && ctx.fileStatus?.complete === true,
+        complete: briefComplete,
+        brief,
+        briefComplete,
+        questions: ctx.ready ? briefQuestions : ctx.questions,
+        currentQuestion: ctx.ready ? briefQuestions[0] ?? null : ctx.questions[0] ?? null,
+        missing: ctx.ready ? briefQuestions.map((q) => q.id) : ctx.missing,
     };
 }
 
@@ -366,14 +668,37 @@ function withNextStep(report) {
     return report;
 }
 
-function buildQuestions({ slug, title, titleForSlug, choiceStates }) {
+function withBriefNextStep(report) {
+    const architectRecommendation = 'Use article-architect with the brief block in three-act-outline.md.';
+
+    if (report.action === 'needs_input' || report.action === 'needs_scaffold_input') {
+        report.next = {
+            questions: report.questions,
+        };
+    } else if (report.action === 'answer_saved' || report.action === 'would_save_answer') {
+        report.next = report.briefComplete
+            ? { recommendation: architectRecommendation }
+            : { questions: report.questions };
+    } else if (report.action === 'synced' || report.action === 'would_sync') {
+        report.next = report.briefComplete
+            ? { recommendation: architectRecommendation }
+            : { questions: report.questions };
+    } else if (report.action === 'brief_complete') {
+        report.next = {
+            recommendation: architectRecommendation,
+        };
+    }
+    return report;
+}
+
+function buildQuestions({ slug, title, titleForSlug, choiceStates, language }) {
     const questions = [];
 
     if (!slug) {
         const suggestion = titleForSlug ? normalizeSlug(titleForSlug) : null;
         questions.push({
             id: 'slug',
-            question: 'What folder slug should be used for the article?',
+            question: localize(SCAFFOLD_QUESTIONS.slug, language),
             suggestion: suggestion || null,
             choices: choiceStates.map((state) => state.slug).filter(Boolean),
         });
@@ -382,11 +707,315 @@ function buildQuestions({ slug, title, titleForSlug, choiceStates }) {
     if (!title) {
         questions.push({
             id: 'title',
-            question: 'What is the article title?',
+            question: localize(SCAFFOLD_QUESTIONS.title, language),
         });
     }
 
     return questions;
+}
+
+function buildBriefQuestions(brief, ctx) {
+    const questions = [];
+
+    for (const field of BRIEF_FIELDS) {
+        if (!briefFieldApplies(field, brief, ctx)) continue;
+
+        if (briefValueMissing(field, brief[field.id])) {
+            questions.push({
+                id: field.id,
+                kind: field.kind,
+                question: localize(field.questions, ctx.language),
+            });
+            break;
+        }
+    }
+
+    return questions;
+}
+
+function briefFieldApplies(field, brief, ctx) {
+    if (field.optionalWhen === 'repositoryContext') {
+        return field.id in brief || repositoryContextLikely(ctx, brief);
+    }
+
+    return true;
+}
+
+function repositoryContextLikely(ctx, brief) {
+    const text = [
+        ctx.title,
+        ctx.slug,
+        ...(ctx.context ?? []),
+        brief.topic,
+        brief.goal,
+        brief.readerTakeaway,
+        brief.constraints,
+    ]
+        .filter(Boolean)
+        .join(' ');
+
+    if (!text) return false;
+    if (parseRepositoryLinks(text).length > 0) return true;
+    return REPOSITORY_CONTEXT_PATTERNS.some((pattern) => pattern.test(text));
+}
+
+function localize(messages, language) {
+    return messages[language] ?? messages[DEFAULT_LANGUAGE] ?? messages.en;
+}
+
+function normalizeBrief(brief) {
+    const normalized = {};
+    if (!brief || typeof brief !== 'object') return normalized;
+
+    for (const field of BRIEF_FIELDS) {
+        if (!(field.id in brief)) continue;
+        const value = brief[field.id];
+        if (field.kind === 'list') {
+            normalized[field.id] = Array.isArray(value)
+                ? value.map((item) => String(item).trim()).filter(Boolean)
+                : parseListValue(value);
+        } else if (field.kind === 'repository') {
+            const repository = normalizeRepositoryValue(value, { strict: false });
+            if (repository) normalized[field.id] = repository;
+        } else {
+            const text = String(value ?? '').trim();
+            if (text) normalized[field.id] = text;
+        }
+    }
+
+    return normalized;
+}
+
+function briefValueMissing(field, value) {
+    if (field.kind === 'list') return !Array.isArray(value) || value.length === 0;
+    if (field.kind === 'repository') return !isRepositoryAnswer(value);
+    return typeof value !== 'string' || value.trim().length === 0;
+}
+
+function findBriefField(id) {
+    const field = BRIEF_FIELDS.find((candidate) => candidate.id === id);
+    if (!field) {
+        throw new Error(`Unknown brief field: ${id}. Supported: ${BRIEF_FIELDS.map((f) => f.id).join(', ')}`);
+    }
+    return field;
+}
+
+function parseBriefValue(field, raw) {
+    if (field.kind === 'list') return parseListValue(raw);
+    if (field.kind === 'repository') return normalizeRepositoryValue(raw, { strict: true });
+
+    const value = String(raw ?? '').trim();
+    if (!value) throw new Error(`Brief field ${field.id} cannot be empty`);
+    return value;
+}
+
+function parseListValue(raw) {
+    const items = Array.isArray(raw)
+        ? raw
+        : String(raw ?? '')
+              .split(/[,;\n]/)
+              .map((item) => item.trim());
+    const cleaned = items.map((item) => String(item).trim()).filter(Boolean);
+    if (cleaned.length === 0) throw new Error('List value cannot be empty');
+    return cleaned;
+}
+
+function isRepositoryAnswer(value) {
+    if (!value || typeof value !== 'object') return false;
+    if (value.status === 'none') return true;
+    return value.status === 'provided' && repositoryItems(value).length > 0;
+}
+
+function normalizeRepositoryValue(raw, options = {}) {
+    if (Array.isArray(raw)) {
+        const items = raw
+            .flatMap((item) => parseRepositoryLinks(repositoryRawValue(item)))
+            .filter(Boolean);
+        if (items.length > 0) return buildRepositoryValue(items);
+        if (options.strict) throw new Error(repositoryValueError());
+        return null;
+    }
+
+    if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+        if (raw.status === 'none') return { status: 'none' };
+        if (raw.status === 'provided') {
+            const items = repositoryItems(raw);
+            if (items.length > 0) return buildRepositoryValue(items);
+        }
+        if (options.strict) throw new Error(repositoryValueError());
+        return null;
+    }
+
+    const value = String(raw ?? '').trim();
+    if (!value) {
+        if (options.strict) throw new Error(repositoryValueError());
+        return null;
+    }
+
+    if (NO_REPOSITORY_ANSWERS.has(value.toLowerCase())) {
+        return { status: 'none' };
+    }
+
+    const parsed = parseRepositoryLinks(value);
+    if (parsed.length > 0) return buildRepositoryValue(parsed);
+
+    if (options.strict) throw new Error(repositoryValueError());
+    return null;
+}
+
+function repositoryRawValue(value) {
+    if (value && typeof value === 'object' && !Array.isArray(value)) return value.url ?? '';
+    return value;
+}
+
+function repositoryItems(value) {
+    if (!value || typeof value !== 'object' || value.status !== 'provided') return [];
+
+    if (!Array.isArray(value.items)) return [];
+    return dedupeRepositories(value.items.map((item) => parseRepositoryLink(item?.url ?? item)).filter(Boolean));
+}
+
+function buildRepositoryValue(items) {
+    const unique = dedupeRepositories(items);
+    return {
+        status: 'provided',
+        items: unique,
+    };
+}
+
+function dedupeRepositories(items) {
+    const seen = new Set();
+    const unique = [];
+
+    for (const item of items) {
+        if (!item?.url) continue;
+        const key = `${item.host}/${item.path}`.toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        unique.push(item);
+    }
+
+    return unique;
+}
+
+function parseRepositoryLinks(value) {
+    return dedupeRepositories(extractRepositoryCandidates(value).map(parseRepositoryLink).filter(Boolean));
+}
+
+function parseRepositoryLink(value) {
+    const raw = stripRepositoryWrapper(String(value ?? '').trim());
+    if (!raw) return null;
+
+    const scpLike = raw.match(/^git@([^:\s]+):(.+)$/);
+    if (scpLike) {
+        const [, host, rawPath] = scpLike;
+        const path = normalizeRepositoryPath(rawPath);
+        if (path) {
+            return {
+                format: 'ssh',
+                url: raw,
+                host,
+                path,
+                name: path.split('/').at(-1),
+            };
+        }
+    }
+
+    try {
+        const url = new URL(raw);
+        if (url.protocol === 'https:') {
+            const path = normalizeRepositoryPath(url.pathname);
+            if (path) {
+                return {
+                    format: 'https',
+                    url: raw,
+                    host: url.host,
+                    path,
+                    name: path.split('/').at(-1),
+                };
+            }
+        }
+
+        if (url.protocol === 'ssh:') {
+            const path = normalizeRepositoryPath(url.pathname);
+            if (path) {
+                return {
+                    format: 'ssh',
+                    url: raw,
+                    host: url.host,
+                    path,
+                    name: path.split('/').at(-1),
+                };
+            }
+        }
+    } catch {
+        // Fall through to strict error handling below.
+    }
+
+    return null;
+}
+
+function extractRepositoryCandidates(value) {
+    const raw = String(value ?? '')
+        .trim()
+        .replace(/^<|>$/g, '');
+    if (!raw) return [];
+
+    const candidates = [];
+    collectRepositoryMatches(candidates, raw, /\((https?:\/\/[^)\s]+|ssh:\/\/[^)\s]+)\)/gi, 1);
+    collectRepositoryMatches(candidates, raw, /git@[^:\s]+:[^\s),;]+/gi, 0);
+    collectRepositoryMatches(candidates, raw, /(?:https?:\/\/|ssh:\/\/)[^\s),;]+/gi, 0);
+
+    if (candidates.length === 0) return [stripRepositoryWrapper(raw)];
+
+    return candidates
+        .sort((a, b) => a.index - b.index)
+        .map((candidate) => candidate.value)
+        .filter((candidate, index, list) => list.indexOf(candidate) === index);
+}
+
+function collectRepositoryMatches(candidates, raw, pattern, groupIndex) {
+    for (const match of raw.matchAll(pattern)) {
+        const value = match[groupIndex] ?? match[0];
+        const offset = groupIndex > 0 ? match[0].indexOf(value) : 0;
+        candidates.push({
+            value: stripLinkPunctuation(value),
+            index: match.index + offset,
+        });
+    }
+}
+
+function stripRepositoryWrapper(value) {
+    return stripLinkPunctuation(
+        String(value ?? '')
+            .trim()
+            .replace(/^<|>$/g, '')
+            .replace(/^`|`$/g, ''),
+    );
+}
+
+function stripLinkPunctuation(value) {
+    return String(value ?? '').replace(/[),.;]+$/g, '');
+}
+
+function normalizeRepositoryPath(rawPath) {
+    const segments = String(rawPath ?? '')
+        .trim()
+        .replace(/^\/+|\/+$/g, '')
+        .split('/')
+        .map((segment) => segment.trim())
+        .filter(Boolean);
+
+    if (segments.length < 2) return null;
+
+    const last = segments.at(-1).replace(/\.git$/i, '');
+    if (!last) return null;
+    segments[segments.length - 1] = last;
+    return segments.join('/');
+}
+
+function repositoryValueError() {
+    return 'Repository answer must be "no" or one or more HTTPS/SSH repository URLs, for example https://github.com/org/repo or git@github.com:org/repo.git';
 }
 
 function getTargetStatus(target, dryRun) {
@@ -625,6 +1254,8 @@ function writeState(ctx, status) {
     const now = new Date().toISOString();
     const previous = ctx.state ?? {};
     const next = {
+        $schema: STATE_SCHEMA_URL,
+        schemaVersion: STATE_SCHEMA_VERSION,
         version: STATE_VERSION,
         createdAt: previous.createdAt ?? now,
         updatedAt: now,
@@ -634,11 +1265,172 @@ function writeState(ctx, status) {
         language: ctx.language ?? previous.language ?? DEFAULT_LANGUAGE,
         articleDir: ctx.slug,
         files: ARTICLE_FILES.map((file) => file.dest),
+        brief: normalizeBrief(previous.brief),
+        briefUpdatedAt: previous.briefUpdatedAt ?? null,
     };
 
     const dir = stateDir(ctx.target);
     mkdirSync(dir, { recursive: true });
     writeFileSync(statePath(ctx.target, ctx.slug), `${JSON.stringify(next, null, 2)}\n`);
+}
+
+function writeBriefAnswer(ctx, field, value) {
+    const now = new Date().toISOString();
+    const previous = ctx.state ?? {};
+    const brief = normalizeBrief(previous.brief);
+    brief[field.id] = value;
+
+    const next = {
+        $schema: STATE_SCHEMA_URL,
+        schemaVersion: STATE_SCHEMA_VERSION,
+        version: STATE_VERSION,
+        createdAt: previous.createdAt ?? now,
+        updatedAt: now,
+        status: previous.status ?? (ctx.complete ? 'applied' : 'started'),
+        slug: ctx.slug,
+        title: ctx.title ?? previous.title ?? null,
+        language: ctx.language ?? previous.language ?? DEFAULT_LANGUAGE,
+        articleDir: ctx.slug,
+        files: ARTICLE_FILES.map((file) => file.dest),
+        brief,
+        briefUpdatedAt: now,
+    };
+
+    const dir = stateDir(ctx.target);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(statePath(ctx.target, ctx.slug), `${JSON.stringify(next, null, 2)}\n`);
+}
+
+function syncBriefToOutline(ctx, opts) {
+    const brief = normalizeBrief(ctx.state?.brief);
+    const outlinePath = join(ctx.articleDir, 'three-act-outline.md');
+    const relPath = relative(ctx.target, outlinePath);
+
+    if (!existsSync(outlinePath)) {
+        return {
+            path: relPath,
+            action: 'missing',
+        };
+    }
+
+    const current = readFileSync(outlinePath, 'utf8');
+    const block = renderBriefBlock(brief, ctx.language);
+    const next = upsertBriefBlock(current, block);
+
+    if (current === next) {
+        return {
+            path: relPath,
+            action: 'unchanged',
+        };
+    }
+
+    if (!opts.dryRun) {
+        writeFileSync(outlinePath, next);
+    }
+
+    return {
+        path: relPath,
+        action: opts.dryRun ? 'would-update' : 'updated',
+    };
+}
+
+function renderBriefBlock(brief, language) {
+    const title = localize(
+        {
+            en: '## Article Brief',
+            ru: '## Бриф статьи',
+        },
+        language,
+    );
+
+    const lines = [title, ''];
+
+    for (const field of BRIEF_FIELDS) {
+        const value = brief[field.id];
+        if (briefValueMissing(field, value)) continue;
+
+        const label = localize(field.labels, language);
+        lines.push(`- **${label}:** ${renderBriefValueMarkdown(field, value, language)}`);
+    }
+
+    if (lines.length === 2) {
+        lines.push(
+            localize(
+                {
+                    en: '_No brief answers saved yet._',
+                    ru: '_Пока нет сохраненных ответов брифа._',
+                },
+                language,
+            ),
+        );
+    }
+
+    return `${BRIEF_BLOCK_START}\n${lines.join('\n')}\n${BRIEF_BLOCK_END}\n`;
+}
+
+function formatMarkdownInline(value) {
+    return String(value)
+        .trim()
+        .replace(/\r?\n/g, '<br>');
+}
+
+function renderBriefValueMarkdown(field, value, language) {
+    if (field.kind === 'repository') return formatRepositoryMarkdown(value, language);
+    if (Array.isArray(value)) return value.join(', ');
+    return formatMarkdownInline(value);
+}
+
+function renderBriefValueHuman(field, value, language = DEFAULT_LANGUAGE) {
+    if (field.kind === 'repository') return formatRepositoryHuman(value, language);
+    if (Array.isArray(value)) return value.join(', ');
+    return String(value);
+}
+
+function formatRepositoryMarkdown(value, language) {
+    if (value?.status === 'none') {
+        return localize({ en: 'no repository', ru: 'нет' }, language);
+    }
+
+    const items = repositoryItems(value);
+    if (items.length > 0) return items.map(formatRepositoryItemMarkdown).join('<br>');
+
+    return '';
+}
+
+function formatRepositoryItemMarkdown(item) {
+    if (item.format === 'https') {
+        const label = item.path ? `${item.host}/${item.path}` : item.url;
+        return `[${formatMarkdownInline(label)}](${item.url})`;
+    }
+
+    return `\`${String(item.url ?? '').replace(/`/g, '\\`')}\``;
+}
+
+function formatRepositoryHuman(value, language) {
+    if (value?.status === 'none') return localize({ en: 'no repository', ru: 'нет' }, language);
+    const items = repositoryItems(value);
+    if (items.length > 0) return items.map((item) => item.url).join(', ');
+    return '';
+}
+
+function upsertBriefBlock(content, block) {
+    const start = content.indexOf(BRIEF_BLOCK_START);
+    const end = content.indexOf(BRIEF_BLOCK_END);
+
+    if (start !== -1 && end !== -1 && end > start) {
+        const afterEnd = end + BRIEF_BLOCK_END.length;
+        const before = content.slice(0, start).replace(/\s*$/, '\n\n');
+        const after = content.slice(afterEnd).replace(/^\s*/, '\n');
+        return `${before}${block}${after}`;
+    }
+
+    const titleMatch = content.match(/^# .*(?:\r?\n){1,2}/);
+    if (!titleMatch) return `${block}\n${content}`;
+
+    const insertAt = titleMatch[0].length;
+    const before = content.slice(0, insertAt).replace(/\s*$/, '\n\n');
+    const after = content.slice(insertAt).replace(/^\s*/, '');
+    return `${before}${block}\n${after}`;
 }
 
 function inferTitleFromIndex(articleDir) {
@@ -693,19 +1485,48 @@ function shellQuote(value) {
 
 export function printUsage(scriptName, extra = '') {
     console.log(`Usage:
-  node <SKILL_DIR>/scripts/${scriptName} [--target <path>] [--slug <slug>] [--title <title>] [--language ru|en] [--dry-run] [--force] [--new] [--json]
+  node <SKILL_DIR>/scripts/${scriptName} [--target <path>] [--slug <slug>] [--title <title>] [--thread-title <title>] [--context <text>] [--language ru|en] [--dry-run] [--force] [--new] [--json]
 
 Flags:
   --target <path>    Article workspace root; default is current working directory
   --slug <slug>      Article folder name; unsafe characters are normalized
   --title <title>    Article title for index.md and three-act-outline.md
+  --thread-title <t> Current IDE thread/chat title; used to recover an existing article slug
+  --chat-title <t>   Alias for --thread-title
+  --context <text>   Extra article/chat context for conditional brief questions; may be repeated
   --language ru|en   Template language; default is ru
   --dry-run          Show intended changes without writing article files
   --force            Overwrite conflicting article files instead of writing *.new suggestions
-  --new              Ignore saved scaffold state and ask for a new article slug
+  --new              Ignore saved state; still recover slug from --thread-title when folder exists
   --json             Print machine-readable JSON
   --help             Show this help${extra ? `\n\n${extra}` : ''}
 `);
+}
+
+export function printBriefUsage(scriptName, extra = '') {
+    console.log(`Usage:
+  node <SKILL_DIR>/scripts/${scriptName} [--target <path>] [--slug <slug>] [--thread-title <title>] [--context <text>] [--field <id>] [--value <answer>] [--json]
+
+Flags:
+  --target <path>    Article workspace root; default is current working directory
+  --slug <slug>      Article folder name; unsafe characters are normalized
+  --thread-title <t> Current IDE thread/chat title; used to recover an existing article slug
+  --chat-title <t>   Alias for --thread-title
+  --context <text>   Extra article/chat context for conditional brief questions; may be repeated
+  --field <id>       Brief field to save (brief-answer.mjs only)
+  --value <answer>   Answer value to save (brief-answer.mjs only)
+  --json             Print machine-readable JSON
+  --help             Show this help${extra ? `\n\n${extra}` : ''}
+
+Brief fields:
+${BRIEF_FIELDS.map((field) => `  - ${field.id}${briefFieldUsageSuffix(field)}`).join('\n')}
+`);
+}
+
+function briefFieldUsageSuffix(field) {
+    if (field.kind === 'list') return ' (comma-separated list)';
+    if (field.kind === 'repository') return ' (one or more HTTPS/SSH URLs, or no)';
+    return '';
 }
 
 export function finish(report, opts, humanPrinter) {
@@ -713,6 +1534,40 @@ export function finish(report, opts, humanPrinter) {
         console.log(JSON.stringify(report, null, 2));
     } else {
         humanPrinter(report);
+    }
+}
+
+export function printBriefReport(report) {
+    console.log(`Article brief: ${report.action}`);
+    console.log(`Target: ${report.target}`);
+    if (report.slug) console.log(`Slug: ${report.slug}`);
+    if (report.title) console.log(`Title: ${report.title}`);
+
+    if (Object.keys(report.brief ?? {}).length > 0) {
+        console.log('');
+        console.log('Brief:');
+        for (const field of BRIEF_FIELDS) {
+            const value = report.brief[field.id];
+            if (value === undefined) continue;
+            const rendered = renderBriefValueHuman(field, value, report.language);
+            console.log(`- ${field.id}: ${rendered}`);
+        }
+    }
+
+    if (report.markdown) {
+        console.log('');
+        console.log(`Markdown: ${report.markdown.action}: ${report.markdown.path}`);
+    }
+
+    if (report.currentQuestion) {
+        console.log('');
+        console.log('Question:');
+        console.log(`- ${report.currentQuestion.id}: ${report.currentQuestion.question}`);
+    }
+
+    if (report.next?.recommendation) {
+        console.log('');
+        console.log(`Next: ${report.next.recommendation}`);
     }
 }
 

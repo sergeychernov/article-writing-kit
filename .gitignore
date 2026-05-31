@@ -1,0 +1,8 @@
+# ide-agents (managed — do not edit manually)
+.agents/skills/audit-debt
+.agents/skills/audit-init
+.claude/skills/audit-debt
+.claude/skills/audit-init
+.cursor/skills/audit-debt
+.cursor/skills/audit-init
+

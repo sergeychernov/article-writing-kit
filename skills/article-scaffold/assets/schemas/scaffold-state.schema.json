@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-scaffold/assets/schemas/scaffold-state.schema.json",
+  "title": "Article Scaffold State",
+  "description": "Recoverable article-scaffold state written to .article-kit/scaffold/<slug>.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "version",
+    "createdAt",
+    "updatedAt",
+    "status",
+    "slug",
+    "title",
+    "language",
+    "articleDir",
+    "files",
+    "brief",
+    "briefUpdatedAt"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-scaffold/assets/schemas/scaffold-state.schema.json"
+    },
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["started", "applied"]
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "language": {
+      "type": "string",
+      "enum": ["ru", "en"]
+    },
+    "articleDir": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "index.md",
+          "lead.md",
+          "act-1-setup.md",
+          "act-2-investigation.md",
+          "act-3-resolution.md",
+          "three-act-outline.md"
+        ]
+      },
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true
+    },
+    "brief": {
+      "$ref": "#/$defs/brief"
+    },
+    "briefUpdatedAt": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "brief": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "topic": {
+          "type": "string",
+          "minLength": 1
+        },
+        "goal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repository": {
+          "$ref": "#/$defs/repositoryAnswer"
+        },
+        "audience": {
+          "type": "string",
+          "minLength": 1
+        },
+        "publicationTargets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "readerTakeaway": {
+          "type": "string",
+          "minLength": 1
+        },
+        "constraints": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "repositoryAnswer": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status"],
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "none"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "items"],
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "provided"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/repository"
+              },
+              "minItems": 1
+            }
+          }
+        }
+      ]
+    },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "url", "host", "path", "name"],
+      "properties": {
+        "format": {
+          "type": "string",
+          "enum": ["https", "ssh"]
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "host": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^[^/]+/.+"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

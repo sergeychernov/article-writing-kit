@@ -38,6 +38,10 @@ Agent body should tell the model to **resolve `<SKILL_DIR>`**, run `node <SKILL_
 
 Optional YAML frontmatter: `description`, `scope` (defaults to `any`).
 
+Article-specific agents in this kit must use the `article-` prefix in the file
+name, for example `agents/article-architect.md`. Prefer `article-` over `awk-`
+or unprefixed names so IDE autocomplete can group the kit under `/art`.
+
 Body structure:
 
 1. **Role** — one paragraph

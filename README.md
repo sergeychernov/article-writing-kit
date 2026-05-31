@@ -28,22 +28,27 @@ scope: any   # global | project | any
 ---
 ```
 
+## Naming convention
+
+Production article-writing-kit skills use the `article-` prefix in both the
+folder name and frontmatter `name`, for example `article-init`. Article-specific
+agents use the same prefix, for example `agents/article-architect.md`.
+
+Prefer `article-` over `awk-` because it is readable and groups naturally in IDE
+autocomplete via `/art`. Do not add new unprefixed article skills or agents.
+Starter/demo artifacts without `article-` are not a naming precedent.
+
 ## Agents
 
 Agent files live in `agents/<name>.md`. Optional YAML frontmatter with `description` and `scope`.
 
-## Sample artifacts
-
-This repo was bootstrapped with starter skills and agents. Replace or remove them as you build your catalog.
+## Current artifacts
 
 | Kind | ID | Purpose |
 |------|-----|---------|
 | skill | `article-init` | Script-driven initialization for an Obsidian-friendly article workspace |
 | skill | `article-scaffold` | Wizard-style article folder scaffolding with resumable state |
-| skill | `hello` | Smoke-test skill for installations |
-| skill | `article-outline` | Outline a long-form article |
-| agent | `editor` | Review and tighten prose |
-| agent | `researcher` | Gather facts and sources |
+| agent | `oracle` | Demo/starter agent; not a naming precedent for article-writing-kit artifacts |
 
 ## Local testing
 
@@ -52,6 +57,8 @@ After installing the skills as **Project** in ide-agents, run this inside a targ
 ```bash
 node .cursor/skills/article-init/scripts/init-workspace.mjs --dry-run
 node .cursor/skills/article-scaffold/scripts/scaffold-resume.mjs --new --json
+node .cursor/skills/article-scaffold/scripts/brief-resume.mjs --slug my-article --json
+node .cursor/skills/article-scaffold/scripts/brief-sync.mjs --slug my-article --json
 ```
 
 ## Next steps

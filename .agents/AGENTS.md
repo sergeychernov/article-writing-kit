@@ -26,6 +26,17 @@ scope: any
 
 Project installs symlink into `<project>/.agents/skills/<name>`.
 
+## Naming
+
+- Production article-writing-kit skills must use the `article-` prefix in the
+  folder name and frontmatter `name`, for example `article-init`.
+- Article-specific agents must also use `article-`, for example
+  `agents/article-architect.md`.
+- Prefer `article-` over `awk-` or unprefixed names so IDE autocomplete can
+  group the kit under `/art`.
+- Existing demo or legacy artifacts without `article-` are not a naming
+  precedent.
+
 ## Agents
 
 Markdown files in `agents/` with optional frontmatter. Project installs use `.agents/agents/<name>.md`.

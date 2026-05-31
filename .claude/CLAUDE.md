@@ -22,6 +22,12 @@ Then read stdout (`--json`) or documented output files. See repo-audit-skills fo
 ## When editing
 
 - Keep one skill per folder; the folder name is the skill id.
+- Use the `article-` prefix for production article-writing-kit skills and
+  article-specific agents, for example `article-init` and
+  `agents/article-architect.md`.
+- Prefer `article-` over `awk-` or unprefixed names so IDE autocomplete groups
+  the kit under `/art`. Demo or legacy artifacts without `article-` are not a
+  naming precedent.
 - Use `scope: any` unless the skill must be global-only or project-only.
 - Write instructions in the skill body, not only in frontmatter.
 - Commit meaningful changes; ide-agents symlinks from the cloned copy under `~/.ide-agents/repos/`.

@@ -20,6 +20,13 @@ This repository is an **ide-agents skill catalog** — not an application codeba
 
 ## SKILL.md conventions
 
+- Production article-writing-kit skills must use the `article-` prefix in the
+  folder name and frontmatter `name`, for example `article-init` or
+  `article-scaffold`.
+- Prefer `article-` over short aliases such as `awk-`: it is self-descriptive
+  and works well with IDE command autocomplete like `/art`.
+- Do not introduce new unprefixed skill ids. Existing demo or legacy artifacts
+  without `article-` are not a naming precedent.
 - YAML frontmatter: `name`, `description`, `scope` (`global`, `project`, or `any`).
 - Body: instructions the IDE agent follows when the skill is invoked.
 - One skill per directory under `skills/`.
@@ -27,6 +34,8 @@ This repository is an **ide-agents skill catalog** — not an application codeba
 ## Agents
 
 - One markdown file per agent in `agents/`.
+- Article-specific agents must also use the `article-` prefix, for example
+  `agents/article-architect.md`.
 - Optional frontmatter: `description`, `scope`.
 - Agents **orchestrate**; deterministic generators live in `skills/<id>/scripts/` (see `agents.mdc`).
 
