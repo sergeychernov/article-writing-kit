@@ -36,7 +36,25 @@ Agent body should tell the model to **resolve `<SKILL_DIR>`**, run `node <SKILL_
 
 ## Agent file format
 
-Optional YAML frontmatter: `description`, `scope` (defaults to `any`).
+Optional YAML frontmatter: `description`, `scope` (defaults to `any`), and
+`skills`.
+
+Use `skills` to list skill ids that the subagent orchestrates or depends on.
+ide-agents can use this list to install dependent skills together with the
+agent. When `skills` is present, always use YAML block-list style:
+
+```yaml
+---
+description: Orchestrates article-architect to turn a completed brief into a three-act architecture.
+scope: any
+skills:
+  - article-architect
+---
+```
+
+For demo or standalone agents that do not require bundled skills, omit the
+`skills` field entirely. Do not use inline arrays such as `skills: []` or
+`skills: [article-architect]`.
 
 Article-specific agents in this kit must use the `article-` prefix in the file
 name, for example `agents/article-architect.md`. Prefer `article-` over `awk-`

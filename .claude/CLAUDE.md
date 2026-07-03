@@ -25,6 +25,14 @@ Then read stdout (`--json`) or documented output files. See repo-audit-skills fo
 - Use the `article-` prefix for production article-writing-kit skills and
   article-specific agents, for example `article-init` and
   `agents/article-architect.md`.
+- In subagent frontmatter, include `skills` when the agent orchestrates or
+  depends on bundled skills. Always use YAML block-list style:
+  ```yaml
+  skills:
+    - article-architect
+  ```
+  Standalone demo agents omit `skills`; do not use inline arrays like
+  `skills: []`.
 - Prefer `article-` over `awk-` or unprefixed names so IDE autocomplete groups
   the kit under `/art`. Demo or legacy artifacts without `article-` are not a
   naming precedent.

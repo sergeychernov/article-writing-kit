@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-architect/assets/schemas/architect-state.schema.json",
+  "title": "Article Architect State",
+  "description": "Article architecture generated from an article-scaffold brief and synchronized into three-act-outline.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "version",
+    "generatedBy",
+    "createdAt",
+    "updatedAt",
+    "slug",
+    "title",
+    "language",
+    "articleDir",
+    "outline",
+    "source",
+    "brief",
+    "architecture"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-architect/assets/schemas/architect-state.schema.json"
+    },
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "generatedBy": {
+      "type": "string",
+      "const": "article-architect"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "language": {
+      "type": "string",
+      "enum": ["ru", "en"]
+    },
+    "articleDir": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "outline": {
+      "type": "string",
+      "const": "three-act-outline.md"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "brief": {
+      "type": "object"
+    },
+    "architecture": {
+      "$ref": "#/$defs/architecture"
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scaffoldState", "scaffoldUpdatedAt", "briefUpdatedAt"],
+      "properties": {
+        "scaffoldState": {
+          "type": ["string", "null"]
+        },
+        "scaffoldUpdatedAt": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "briefUpdatedAt": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      }
+    },
+    "architecture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["formula", "actSummaries", "recommendedOrder", "acts", "gaps", "assumptions"],
+      "properties": {
+        "formula": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actSummaries": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["act1", "act2", "act3"],
+          "properties": {
+            "act1": {
+              "type": "string",
+              "minLength": 1
+            },
+            "act2": {
+              "type": "string",
+              "minLength": 1
+            },
+            "act3": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "recommendedOrder": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "acts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["act1", "act2", "act3"],
+          "properties": {
+            "act1": {
+              "$ref": "#/$defs/actEnding"
+            },
+            "act2": {
+              "$ref": "#/$defs/actClimax"
+            },
+            "act3": {
+              "$ref": "#/$defs/actResolution"
+            }
+          }
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "actEnding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workingPurpose", "mustKeep", "keyQuestion", "ending"],
+      "properties": {
+        "workingPurpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mustKeep": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "keyQuestion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ending": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "actClimax": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workingPurpose", "mustKeep", "keyQuestion", "climax"],
+      "properties": {
+        "workingPurpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mustKeep": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "keyQuestion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "climax": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "actResolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workingPurpose", "mustKeep", "keyQuestion", "resolution"],
+      "properties": {
+        "workingPurpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mustKeep": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "keyQuestion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolution": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

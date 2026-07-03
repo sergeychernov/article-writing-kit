@@ -12,7 +12,7 @@ Managed with [ide-agents](https://github.com/sergeychernov/ide-agents) — clone
 │   └── <skill-id>/
 │       └── SKILL.md          # required — frontmatter: name, description, scope
 ├── agents/
-│   └── <agent-id>.md         # optional — frontmatter: description, scope
+│   └── <agent-id>.md         # optional — frontmatter: description, scope, skills
 ├── .cursor/rules/            # Cursor project rules (repo structure)
 ├── .claude/CLAUDE.md         # Claude Code project instructions
 └── .agents/AGENTS.md         # Codex project instructions
@@ -40,7 +40,22 @@ Starter/demo artifacts without `article-` are not a naming precedent.
 
 ## Agents
 
-Agent files live in `agents/<name>.md`. Optional YAML frontmatter with `description` and `scope`.
+Agent files live in `agents/<name>.md`. YAML frontmatter may include
+`description`, `scope`, and `skills`.
+
+```yaml
+---
+description: Orchestrates article-architect.
+scope: any
+skills:
+  - article-architect
+---
+```
+
+`skills` lists skill ids the agent orchestrates or depends on, so installers can
+install dependent skills together with the agent. When present, write it as a
+YAML block list. Standalone demo agents omit `skills`; do not use inline arrays
+such as `skills: []` or `skills: [article-architect]`.
 
 ## Current artifacts
 
@@ -48,6 +63,8 @@ Agent files live in `agents/<name>.md`. Optional YAML frontmatter with `descript
 |------|-----|---------|
 | skill | `article-init` | Script-driven initialization for an Obsidian-friendly article workspace |
 | skill | `article-scaffold` | Wizard-style article folder scaffolding with resumable state |
+| skill | `article-architect` | Script-backed three-act architecture from a completed article brief |
+| agent | `article-architect` | Orchestrates the article architecture workflow and calls the skill scripts |
 | agent | `oracle` | Demo/starter agent; not a naming precedent for article-writing-kit artifacts |
 
 ## Local testing
@@ -59,6 +76,8 @@ node .cursor/skills/article-init/scripts/init-workspace.mjs --dry-run
 node .cursor/skills/article-scaffold/scripts/scaffold-resume.mjs --new --json
 node .cursor/skills/article-scaffold/scripts/brief-resume.mjs --slug my-article --json
 node .cursor/skills/article-scaffold/scripts/brief-sync.mjs --slug my-article --json
+node .cursor/skills/article-architect/scripts/architect-status.mjs --slug my-article --json
+node .cursor/skills/article-architect/scripts/architect-prepare.mjs --slug my-article --json
 ```
 
 ## Next steps

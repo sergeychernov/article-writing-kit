@@ -43,6 +43,18 @@ Markdown files in `agents/` with optional frontmatter. Project installs use `.ag
 
 Agents define **role and workflow** only. Repeatable generators (stack detection, audits, structured reports) go in `skills/<skill-id>/scripts/` — agents invoke `node <SKILL_DIR>/scripts/….mjs` instead of improvising the same logic in chat. Pattern: [repo-audit-skills](https://github.com/sergeychernov/repo-audit-skills).
 
+Subagent frontmatter should include `skills` when the agent orchestrates or
+depends on bundled skills. ide-agents can use this metadata to install those
+skills together with the agent. Always use YAML block-list style:
+
+```yaml
+skills:
+  - article-architect
+```
+
+Standalone demo agents omit `skills`; do not use inline arrays like
+`skills: []`.
+
 ## Editing rules
 
 - Do not flatten skills to repo root unless you intentionally use the flat layout (ide-agents detects nested `skills/` first).
