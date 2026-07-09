@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/schemas/habr-state.schema.json",
+  "title": "Article Habr State",
+  "description": "Recoverable article-habr state written to .article-kit/habr/<slug>.json. Stores selected Habr hubs and tags before they are applied to index.md frontmatter.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "version",
+    "generatedBy",
+    "createdAt",
+    "updatedAt",
+    "slug",
+    "title",
+    "language",
+    "articleDir",
+    "maxHubs",
+    "maxTags",
+    "hubs",
+    "tags",
+    "cursor",
+    "appliedAt"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/schemas/habr-state.schema.json"
+    },
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "version": { "type": "integer", "const": 1 },
+    "generatedBy": { "type": "string", "const": "article-habr" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "title": { "type": ["string", "null"] },
+    "language": { "type": "string", "enum": ["ru", "en"] },
+    "articleDir": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "maxHubs": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "maxTags": { "type": "integer", "minimum": 1, "maximum": 10 },
+    "hubs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["alias", "title", "multiauthor"],
+        "properties": {
+          "alias": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "multiauthor": { "type": "boolean" }
+        }
+      },
+      "maxItems": 5
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 64 },
+      "maxItems": 10,
+      "uniqueItems": true
+    },
+    "cursor": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["phase"],
+          "properties": {
+            "phase": { "type": "string", "enum": ["hubs", "tags"] }
+          }
+        }
+      ]
+    },
+    "appliedAt": { "type": ["string", "null"], "format": "date-time" }
+  }
+}

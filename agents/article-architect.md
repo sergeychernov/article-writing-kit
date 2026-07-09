@@ -20,6 +20,10 @@ manually edit article files.
   synchronized into `<slug>/three-act-outline.md`.
 - The article slug, either from the user, current thread title, or script
   recovery.
+- Optional: notes from `article-notes` (`.article-kit/notes/<slug>.json`) when
+  the user brainstormed ideas, theses, cases, or climax candidates before
+  scaffolding. Use them as extra context for the architecture, but do not
+  require them.
 
 ## Workflow
 

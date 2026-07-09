@@ -52,8 +52,17 @@ skills:
   - article-architect
 ```
 
+Router agents (for example `article-assistant`) also list delegated agents
+under `subagents`:
+
+```yaml
+subagents:
+  - article-init
+  - article-scaffold
+```
+
 Standalone demo agents omit `skills`; do not use inline arrays like
-`skills: []`.
+`skills: []`. Leaf agents list only their own skill and never use `subagents`.
 
 ## Editing rules
 

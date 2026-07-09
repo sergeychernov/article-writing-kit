@@ -36,7 +36,8 @@ This repository is an **ide-agents skill catalog** — not an application codeba
 - One markdown file per agent in `agents/`.
 - Article-specific agents must also use the `article-` prefix, for example
   `agents/article-architect.md`.
-- Optional frontmatter: `description`, `scope`.
+- Optional frontmatter: `description`, `scope`, `skills` (own skill ids),
+  `subagents` (delegated agent ids, router agents only). See `agents.mdc`.
 - Agents **orchestrate**; deterministic generators live in `skills/<id>/scripts/` (see `agents.mdc`).
 
 ## Scripts (generators)

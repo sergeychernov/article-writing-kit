@@ -41,7 +41,7 @@ Starter/demo artifacts without `article-` are not a naming precedent.
 ## Agents
 
 Agent files live in `agents/<name>.md`. YAML frontmatter may include
-`description`, `scope`, and `skills`.
+`description`, `scope`, `skills`, and `subagents`.
 
 ```yaml
 ---
@@ -52,10 +52,11 @@ skills:
 ---
 ```
 
-`skills` lists skill ids the agent orchestrates or depends on, so installers can
-install dependent skills together with the agent. When present, write it as a
-YAML block list. Standalone demo agents omit `skills`; do not use inline arrays
-such as `skills: []` or `skills: [article-architect]`.
+`skills` lists the skill id the agent itself orchestrates (the scripts it
+calls). `subagents` lists other agent ids a router agent delegates to (for
+example `article-assistant`). ide-agents auto-installs both. When present,
+write either as a YAML block list. Standalone demo agents omit `skills`; do
+not use inline arrays such as `skills: []` or `skills: [article-architect]`.
 
 ## Current artifacts
 
@@ -64,7 +65,15 @@ such as `skills: []` or `skills: [article-architect]`.
 | skill | `article-init` | Script-driven initialization for an Obsidian-friendly article workspace |
 | skill | `article-scaffold` | Wizard-style article folder scaffolding with resumable state |
 | skill | `article-architect` | Script-backed three-act architecture from a completed article brief |
+| skill | `article-structure` | Post-draft interactive heading labelling for already-written act-*.md files |
+| skill | `article-notes` | Optional pre-scaffold brainstorming notes (ideas, theses, cases, questions, climax) |
+| skill | `article-assistant` | Read-only pipeline router; determines the stage and delegates to a subagent |
+| agent | `article-init` | Orchestrates workspace initialization |
+| agent | `article-scaffold` | Orchestrates folder scaffolding and the brief dialogue |
 | agent | `article-architect` | Orchestrates the article architecture workflow and calls the skill scripts |
+| agent | `article-structure` | Orchestrates the interactive heading-labelling dialogue and calls the skill scripts |
+| agent | `article-notes` | Orchestrates the pre-scaffold notes dialogue |
+| agent | `article-assistant` | Editorial assistant; routes to the right subagent by stage |
 | agent | `oracle` | Demo/starter agent; not a naming precedent for article-writing-kit artifacts |
 
 ## Local testing
@@ -78,6 +87,10 @@ node .cursor/skills/article-scaffold/scripts/brief-resume.mjs --slug my-article 
 node .cursor/skills/article-scaffold/scripts/brief-sync.mjs --slug my-article --json
 node .cursor/skills/article-architect/scripts/architect-status.mjs --slug my-article --json
 node .cursor/skills/article-architect/scripts/architect-prepare.mjs --slug my-article --json
+node .cursor/skills/article-structure/scripts/structure-status.mjs --slug my-article --json
+node .cursor/skills/article-structure/scripts/structure-resume.mjs --slug my-article --json
+node .cursor/skills/article-notes/scripts/notes-resume.mjs --slug my-article --json
+node .cursor/skills/article-assistant/scripts/pipeline-status.mjs --slug my-article --json
 ```
 
 ## Next steps

@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-structure/assets/schemas/structure-state.schema.json",
+  "title": "Article Structure State",
+  "description": "Interactive heading structure built from already-drafted act-*.md files and synchronized into three-act-outline.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "version",
+    "generatedBy",
+    "createdAt",
+    "updatedAt",
+    "slug",
+    "title",
+    "language",
+    "articleDir",
+    "source",
+    "actsOrder",
+    "acts",
+    "cursor",
+    "appliedAt"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-structure/assets/schemas/structure-state.schema.json"
+    },
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "version": { "type": "integer", "const": 1 },
+    "generatedBy": { "type": "string", "const": "article-structure" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "title": { "type": "string", "minLength": 1 },
+    "language": { "type": "string", "enum": ["ru", "en"] },
+    "articleDir": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "source": { "$ref": "#/$defs/source" },
+    "actsOrder": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["act1", "act2", "act3"] },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "acts": { "$ref": "#/$defs/acts" },
+    "cursor": { "$ref": "#/$defs/cursor" },
+    "appliedAt": { "type": ["string", "null"], "format": "date-time" }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scaffoldState", "scaffoldUpdatedAt"],
+      "properties": {
+        "scaffoldState": { "type": ["string", "null"] },
+        "scaffoldUpdatedAt": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "acts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["act1", "act2", "act3"],
+      "properties": {
+        "act1": { "$ref": "#/$defs/act" },
+        "act2": { "$ref": "#/$defs/act" },
+        "act3": { "$ref": "#/$defs/act" }
+      }
+    },
+    "act": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "exists", "ready", "segments", "chunks"],
+      "properties": {
+        "file": { "type": ["string", "null"] },
+        "exists": { "type": "boolean" },
+        "ready": { "type": "boolean" },
+        "appliedAt": { "type": ["string", "null"], "format": "date-time" },
+        "segments": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/segment" }
+        },
+        "chunks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/chunk" }
+        }
+      }
+    },
+    "segment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index", "startLine", "endLine", "preview"],
+      "properties": {
+        "index": { "type": "integer", "minimum": 0 },
+        "startLine": { "type": "integer", "minimum": 1 },
+        "endLine": { "type": "integer", "minimum": 1 },
+        "preview": { "type": "string" }
+      }
+    },
+    "chunk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "startLine", "endLine", "preview", "heading"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_-]+$" },
+        "startLine": { "type": "integer", "minimum": 1 },
+        "endLine": { "type": "integer", "minimum": 1 },
+        "preview": { "type": "string" },
+        "heading": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/heading" }
+          ]
+        }
+      }
+    },
+    "heading": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "text"],
+      "properties": {
+        "level": { "type": "string", "enum": ["h2", "h3", "callout"] },
+        "text": { "type": "string", "minLength": 1 }
+      }
+    },
+    "cursor": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["actId", "phase", "chunkId"],
+          "properties": {
+            "actId": { "type": "string", "enum": ["act1", "act2", "act3"] },
+            "phase": { "type": "string", "enum": ["chunking", "headings", "done"] },
+            "chunkId": { "type": ["string", "null"] }
+          }
+        }
+      ]
+    }
+  }
+}

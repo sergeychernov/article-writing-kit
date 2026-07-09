@@ -31,8 +31,15 @@ Then read stdout (`--json`) or documented output files. See repo-audit-skills fo
   skills:
     - article-architect
   ```
+  Router agents (for example `article-assistant`) also list delegated agents
+  under `subagents`:
+  ```yaml
+  subagents:
+    - article-init
+    - article-scaffold
+  ```
   Standalone demo agents omit `skills`; do not use inline arrays like
-  `skills: []`.
+  `skills: []`. Leaf agents list only their own skill and never use `subagents`.
 - Prefer `article-` over `awk-` or unprefixed names so IDE autocomplete groups
   the kit under `/art`. Demo or legacy artifacts without `article-` are not a
   naming precedent.

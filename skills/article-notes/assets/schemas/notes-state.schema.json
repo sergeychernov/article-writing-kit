@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-notes/assets/schemas/notes-state.schema.json",
+  "title": "Article Notes State",
+  "description": "Optional pre-scaffold brainstorming notes: ideas, theses, cases, open questions, and climax candidates. Written to .article-kit/notes/<slug>.json and synced into <slug>/article-notes.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "version",
+    "generatedBy",
+    "createdAt",
+    "updatedAt",
+    "slug",
+    "title",
+    "language",
+    "status",
+    "records",
+    "leadingClimaxId",
+    "syncedAt"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-notes/assets/schemas/notes-state.schema.json"
+    },
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "version": { "type": "integer", "const": 1 },
+    "generatedBy": { "type": "string", "const": "article-notes" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "title": { "type": ["string", "null"], "minLength": 1 },
+    "language": { "type": "string", "enum": ["ru", "en"] },
+    "status": { "type": "string", "enum": ["started", "complete", "skipped"] },
+    "records": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/record" }
+    },
+    "leadingClimaxId": { "type": ["string", "null"] },
+    "syncedAt": { "type": ["string", "null"], "format": "date-time" }
+  },
+  "$defs": {
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "text", "createdAt", "updatedAt"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^n[0-9]+$" },
+        "kind": { "type": "string", "enum": ["idea", "thesis", "case", "question", "climax"] },
+        "text": { "type": "string", "minLength": 1 },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

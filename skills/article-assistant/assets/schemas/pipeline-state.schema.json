@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-assistant/assets/schemas/pipeline-state.schema.json",
+  "title": "Article Assistant Pipeline Status",
+  "description": "Read-only route response from pipeline-status.mjs. The article-assistant skill does not persist state; this schema documents the JSON the script emits with --json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "skill",
+    "stateSchema",
+    "target",
+    "slug",
+    "language",
+    "initialized",
+    "intent",
+    "action",
+    "stage"
+  ],
+  "properties": {
+    "skill": { "type": "string", "const": "article-assistant" },
+    "stateSchema": { "type": "string" },
+    "stateSchemaVersion": { "type": "integer" },
+    "target": { "type": "string" },
+    "slug": { "type": ["string", "null"] },
+    "slugSource": { "type": ["string", "null"] },
+    "suggestedThreadTitle": { "type": ["string", "null"] },
+    "language": { "type": "string", "enum": ["ru", "en"] },
+    "initialized": { "type": "boolean" },
+    "intent": { "type": "string", "enum": ["auto", "notes", "scaffold", "architect", "structure", "habr"] },
+    "action": { "type": "string", "enum": ["route", "needs_input"] },
+    "stage": {
+      "type": "string",
+      "enum": ["init", "notes", "scaffold", "brief", "architect", "draft", "structure", "habr", "done", "unknown"]
+    },
+    "recommendedSubagent": { "type": ["string", "null"] },
+    "optionalSubagents": { "type": "array", "items": { "type": "string" } },
+    "reason": { "type": ["string", "null"] },
+    "message": { "type": ["string", "null"] },
+    "currentQuestion": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string" },
+        "question": { "type": "string" }
+      }
+    },
+    "statusByPhase": {
+      "type": "object",
+      "description": "Per-phase status snapshots collected from the other skills' status scripts."
+    },
+    "next": {
+      "type": ["object", "null"],
+      "properties": {
+        "recommendation": { "type": "string" }
+      }
+    }
+  }
+}

@@ -36,12 +36,14 @@ Agent body should tell the model to **resolve `<SKILL_DIR>`**, run `node <SKILL_
 
 ## Agent file format
 
-Optional YAML frontmatter: `description`, `scope` (defaults to `any`), and
-`skills`.
+Optional YAML frontmatter: `description`, `scope` (defaults to `any`),
+`skills`, and `subagents`.
 
-Use `skills` to list skill ids that the subagent orchestrates or depends on.
-ide-agents can use this list to install dependent skills together with the
-agent. When `skills` is present, always use YAML block-list style:
+`skills` lists the skill id **the agent itself orchestrates** (the scripts it
+calls). `subagents` lists other agent ids the orchestrator **delegates to**
+(router agents only). ide-agents uses `skills` to auto-install dependent skills
+together with the agent, and `subagents` to auto-install the delegated agents.
+When either field is present, use YAML block-list style:
 
 ```yaml
 ---
@@ -52,9 +54,27 @@ skills:
 ---
 ```
 
+A router agent that delegates to several leaf agents:
+
+```yaml
+---
+description: Editorial assistant — determines the current article stage and delegates to the right subagent.
+scope: any
+skills:
+  - article-assistant
+subagents:
+  - article-init
+  - article-notes
+  - article-scaffold
+  - article-architect
+  - article-structure
+---
+```
+
 For demo or standalone agents that do not require bundled skills, omit the
 `skills` field entirely. Do not use inline arrays such as `skills: []` or
-`skills: [article-architect]`.
+`skills: [article-architect]`. Leaf agents list only their own skill in
+`skills` and never use `subagents`.
 
 Article-specific agents in this kit must use the `article-` prefix in the file
 name, for example `agents/article-architect.md`. Prefer `article-` over `awk-`

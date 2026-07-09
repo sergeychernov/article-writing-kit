@@ -1,0 +1,2168 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/schemas/habr-hubs.schema.json",
+  "source": "habr.com thematic hubs list (chips suggest panel)",
+  "fetchedAt": "2026-07-08",
+  "limits": {
+    "maxHubs": 5,
+    "maxTags": 10
+  },
+  "note": "Asterisk (*) in the source marks multiauthor thematic hubs — the only hubs a regular author can publish to. Stored as multiauthor:true. Hubs without * are corporate/single-author and cannot be freely selected.",
+  "hubCount": 431,
+  "hubs": [
+    {
+      "alias": "$mol",
+      "title": "$mol",
+      "multiauthor": true
+    },
+    {
+      "alias": "*nix",
+      "title": "*nix",
+      "multiauthor": true
+    },
+    {
+      "alias": ".net",
+      "title": ".NET",
+      "multiauthor": true
+    },
+    {
+      "alias": "1с",
+      "title": "1С",
+      "multiauthor": true
+    },
+    {
+      "alias": "1с-битрикс",
+      "title": "1С-Битрикс",
+      "multiauthor": true
+    },
+    {
+      "alias": "3d-графика",
+      "title": "3D-графика",
+      "multiauthor": true
+    },
+    {
+      "alias": "3d-принтеры",
+      "title": "3D-принтеры",
+      "multiauthor": false
+    },
+    {
+      "alias": "accessibility",
+      "title": "Accessibility",
+      "multiauthor": true
+    },
+    {
+      "alias": "action-script",
+      "title": "Action Script",
+      "multiauthor": true
+    },
+    {
+      "alias": "adobe-flash",
+      "title": "Adobe Flash",
+      "multiauthor": false
+    },
+    {
+      "alias": "agile",
+      "title": "Agile",
+      "multiauthor": true
+    },
+    {
+      "alias": "ajax",
+      "title": "Ajax",
+      "multiauthor": true
+    },
+    {
+      "alias": "amazon-web-services",
+      "title": "Amazon Web Services",
+      "multiauthor": true
+    },
+    {
+      "alias": "android",
+      "title": "Android",
+      "multiauthor": true
+    },
+    {
+      "alias": "angular",
+      "title": "Angular",
+      "multiauthor": true
+    },
+    {
+      "alias": "apache",
+      "title": "Apache",
+      "multiauthor": true
+    },
+    {
+      "alias": "apache-flex",
+      "title": "Apache Flex",
+      "multiauthor": true
+    },
+    {
+      "alias": "ar-и-vr",
+      "title": "AR и VR",
+      "multiauthor": false
+    },
+    {
+      "alias": "arduino",
+      "title": "Arduino",
+      "multiauthor": true
+    },
+    {
+      "alias": "asp",
+      "title": "ASP",
+      "multiauthor": true
+    },
+    {
+      "alias": "assembler",
+      "title": "Assembler",
+      "multiauthor": true
+    },
+    {
+      "alias": "asterisk",
+      "title": "Asterisk",
+      "multiauthor": true
+    },
+    {
+      "alias": "atlassian",
+      "title": "Atlassian",
+      "multiauthor": true
+    },
+    {
+      "alias": "bada",
+      "title": "Bada",
+      "multiauthor": true
+    },
+    {
+      "alias": "big-data",
+      "title": "Big Data",
+      "multiauthor": true
+    },
+    {
+      "alias": "brainfuck",
+      "title": "Brainfuck",
+      "multiauthor": true
+    },
+    {
+      "alias": "bug-hunters",
+      "title": "Bug hunters",
+      "multiauthor": true
+    },
+    {
+      "alias": "c",
+      "title": "C",
+      "multiauthor": true
+    },
+    {
+      "alias": "c#",
+      "title": "C#",
+      "multiauthor": true
+    },
+    {
+      "alias": "c++",
+      "title": "C++",
+      "multiauthor": true
+    },
+    {
+      "alias": "cad-cam",
+      "title": "CAD/CAM",
+      "multiauthor": true
+    },
+    {
+      "alias": "cakephp",
+      "title": "CakePHP",
+      "multiauthor": true
+    },
+    {
+      "alias": "canvas",
+      "title": "Canvas",
+      "multiauthor": true
+    },
+    {
+      "alias": "cgi-графика",
+      "title": "CGI (графика)",
+      "multiauthor": true
+    },
+    {
+      "alias": "cisco",
+      "title": "Cisco",
+      "multiauthor": true
+    },
+    {
+      "alias": "clojure",
+      "title": "Clojure",
+      "multiauthor": true
+    },
+    {
+      "alias": "cms",
+      "title": "CMS",
+      "multiauthor": true
+    },
+    {
+      "alias": "cobol",
+      "title": "Cobol",
+      "multiauthor": true
+    },
+    {
+      "alias": "cocoa",
+      "title": "Cocoa",
+      "multiauthor": true
+    },
+    {
+      "alias": "codeigniter",
+      "title": "CodeIgniter",
+      "multiauthor": true
+    },
+    {
+      "alias": "coffeescript",
+      "title": "CoffeeScript",
+      "multiauthor": true
+    },
+    {
+      "alias": "creative-commons",
+      "title": "Creative Commons",
+      "multiauthor": true
+    },
+    {
+      "alias": "crm-системы",
+      "title": "CRM-системы",
+      "multiauthor": true
+    },
+    {
+      "alias": "css",
+      "title": "CSS",
+      "multiauthor": true
+    },
+    {
+      "alias": "ctf",
+      "title": "CTF",
+      "multiauthor": true
+    },
+    {
+      "alias": "cubrid",
+      "title": "Cubrid",
+      "multiauthor": true
+    },
+    {
+      "alias": "d",
+      "title": "D",
+      "multiauthor": true
+    },
+    {
+      "alias": "dart",
+      "title": "Dart",
+      "multiauthor": true
+    },
+    {
+      "alias": "data-engineering",
+      "title": "Data Engineering",
+      "multiauthor": true
+    },
+    {
+      "alias": "data-mining",
+      "title": "Data Mining",
+      "multiauthor": true
+    },
+    {
+      "alias": "delphi",
+      "title": "Delphi",
+      "multiauthor": true
+    },
+    {
+      "alias": "derby.js",
+      "title": "Derby.js",
+      "multiauthor": true
+    },
+    {
+      "alias": "developer-relations",
+      "title": "Developer Relations",
+      "multiauthor": true
+    },
+    {
+      "alias": "diy-или-сделай-сам",
+      "title": "DIY или Сделай сам",
+      "multiauthor": false
+    },
+    {
+      "alias": "django",
+      "title": "Django",
+      "multiauthor": true
+    },
+    {
+      "alias": "dns",
+      "title": "DNS",
+      "multiauthor": true
+    },
+    {
+      "alias": "doctrine-orm",
+      "title": "Doctrine ORM",
+      "multiauthor": true
+    },
+    {
+      "alias": "drupal",
+      "title": "Drupal",
+      "multiauthor": true
+    },
+    {
+      "alias": "eclipse",
+      "title": "Eclipse",
+      "multiauthor": true
+    },
+    {
+      "alias": "ecm-сэд",
+      "title": "ECM/СЭД",
+      "multiauthor": true
+    },
+    {
+      "alias": "elixir-phoenix",
+      "title": "Elixir/Phoenix",
+      "multiauthor": true
+    },
+    {
+      "alias": "elm",
+      "title": "Elm",
+      "multiauthor": true
+    },
+    {
+      "alias": "emacs",
+      "title": "Emacs",
+      "multiauthor": true
+    },
+    {
+      "alias": "email-маркетинг",
+      "title": "Email-маркетинг",
+      "multiauthor": true
+    },
+    {
+      "alias": "ember.js",
+      "title": "Ember.js",
+      "multiauthor": true
+    },
+    {
+      "alias": "erlang-otp",
+      "title": "Erlang/OTP",
+      "multiauthor": true
+    },
+    {
+      "alias": "erp-системы",
+      "title": "ERP-системы",
+      "multiauthor": true
+    },
+    {
+      "alias": "f#",
+      "title": "F#",
+      "multiauthor": true
+    },
+    {
+      "alias": "facebook-api",
+      "title": "Facebook API",
+      "multiauthor": true
+    },
+    {
+      "alias": "fidonet",
+      "title": "Fidonet",
+      "multiauthor": true
+    },
+    {
+      "alias": "firebird-interbase",
+      "title": "Firebird/Interbase",
+      "multiauthor": true
+    },
+    {
+      "alias": "firefox",
+      "title": "Firefox",
+      "multiauthor": false
+    },
+    {
+      "alias": "flask",
+      "title": "Flask",
+      "multiauthor": true
+    },
+    {
+      "alias": "flutter",
+      "title": "Flutter",
+      "multiauthor": true
+    },
+    {
+      "alias": "forth",
+      "title": "Forth",
+      "multiauthor": true
+    },
+    {
+      "alias": "fortran",
+      "title": "Fortran",
+      "multiauthor": true
+    },
+    {
+      "alias": "fpga",
+      "title": "FPGA",
+      "multiauthor": true
+    },
+    {
+      "alias": "github",
+      "title": "GitHub",
+      "multiauthor": true
+    },
+    {
+      "alias": "go",
+      "title": "Go",
+      "multiauthor": true
+    },
+    {
+      "alias": "godot",
+      "title": "Godot",
+      "multiauthor": true
+    },
+    {
+      "alias": "google-api",
+      "title": "Google API",
+      "multiauthor": true
+    },
+    {
+      "alias": "google-app-engine",
+      "title": "Google App Engine",
+      "multiauthor": true
+    },
+    {
+      "alias": "google-chrome",
+      "title": "Google Chrome",
+      "multiauthor": false
+    },
+    {
+      "alias": "google-cloud-platform",
+      "title": "Google Cloud Platform",
+      "multiauthor": true
+    },
+    {
+      "alias": "google-cloud-vision-api",
+      "title": "Google Cloud Vision API",
+      "multiauthor": true
+    },
+    {
+      "alias": "google-web-toolkit",
+      "title": "Google Web Toolkit",
+      "multiauthor": true
+    },
+    {
+      "alias": "google-таблицы",
+      "title": "Google Таблицы",
+      "multiauthor": false
+    },
+    {
+      "alias": "gpgpu",
+      "title": "GPGPU",
+      "multiauthor": true
+    },
+    {
+      "alias": "gradle",
+      "title": "Gradle",
+      "multiauthor": true
+    },
+    {
+      "alias": "greasemonkey",
+      "title": "GreaseMonkey",
+      "multiauthor": true
+    },
+    {
+      "alias": "groovy-grails",
+      "title": "Groovy & Grails",
+      "multiauthor": true
+    },
+    {
+      "alias": "growth-hacking",
+      "title": "Growth Hacking",
+      "multiauthor": true
+    },
+    {
+      "alias": "gtd",
+      "title": "GTD",
+      "multiauthor": true
+    },
+    {
+      "alias": "gtk+",
+      "title": "GTK+",
+      "multiauthor": true
+    },
+    {
+      "alias": "habr",
+      "title": "Habr",
+      "multiauthor": false
+    },
+    {
+      "alias": "hadoop",
+      "title": "Hadoop",
+      "multiauthor": true
+    },
+    {
+      "alias": "haskell",
+      "title": "Haskell",
+      "multiauthor": true
+    },
+    {
+      "alias": "haxe",
+      "title": "Haxe",
+      "multiauthor": true
+    },
+    {
+      "alias": "help-desk-software",
+      "title": "Help Desk Software",
+      "multiauthor": true
+    },
+    {
+      "alias": "html",
+      "title": "HTML",
+      "multiauthor": true
+    },
+    {
+      "alias": "htmx",
+      "title": "htmx",
+      "multiauthor": true
+    },
+    {
+      "alias": "i2p",
+      "title": "I2P",
+      "multiauthor": true
+    },
+    {
+      "alias": "iis",
+      "title": "IIS",
+      "multiauthor": true
+    },
+    {
+      "alias": "infolust",
+      "title": "INFOLUST",
+      "multiauthor": true
+    },
+    {
+      "alias": "internet-explorer",
+      "title": "Internet Explorer",
+      "multiauthor": false
+    },
+    {
+      "alias": "ios",
+      "title": "iOS",
+      "multiauthor": true
+    },
+    {
+      "alias": "ipfs",
+      "title": "IPFS",
+      "multiauthor": true
+    },
+    {
+      "alias": "iptv",
+      "title": "IPTV",
+      "multiauthor": true
+    },
+    {
+      "alias": "ipv6",
+      "title": "IPv6",
+      "multiauthor": true
+    },
+    {
+      "alias": "it-инфраструктура",
+      "title": "IT-инфраструктура",
+      "multiauthor": true
+    },
+    {
+      "alias": "it-компании",
+      "title": "IT-компании",
+      "multiauthor": false
+    },
+    {
+      "alias": "it-стандарты",
+      "title": "IT-стандарты",
+      "multiauthor": true
+    },
+    {
+      "alias": "it-эмиграция",
+      "title": "IT-эмиграция",
+      "multiauthor": false
+    },
+    {
+      "alias": "java",
+      "title": "Java",
+      "multiauthor": true
+    },
+    {
+      "alias": "java-me",
+      "title": "Java ME",
+      "multiauthor": true
+    },
+    {
+      "alias": "javascript",
+      "title": "JavaScript",
+      "multiauthor": true
+    },
+    {
+      "alias": "jetpack-compose",
+      "title": "Jetpack Compose",
+      "multiauthor": true
+    },
+    {
+      "alias": "joomla",
+      "title": "Joomla",
+      "multiauthor": true
+    },
+    {
+      "alias": "jquery",
+      "title": "jQuery",
+      "multiauthor": true
+    },
+    {
+      "alias": "julia",
+      "title": "Julia",
+      "multiauthor": true
+    },
+    {
+      "alias": "kohana",
+      "title": "Kohana",
+      "multiauthor": true
+    },
+    {
+      "alias": "kotlin",
+      "title": "Kotlin",
+      "multiauthor": true
+    },
+    {
+      "alias": "kubernetes",
+      "title": "Kubernetes",
+      "multiauthor": true
+    },
+    {
+      "alias": "labview",
+      "title": "LabVIEW",
+      "multiauthor": true
+    },
+    {
+      "alias": "laravel",
+      "title": "Laravel",
+      "multiauthor": true
+    },
+    {
+      "alias": "latex",
+      "title": "LaTeX",
+      "multiauthor": true
+    },
+    {
+      "alias": "linux",
+      "title": "Linux",
+      "multiauthor": true
+    },
+    {
+      "alias": "lisp",
+      "title": "Lisp",
+      "multiauthor": true
+    },
+    {
+      "alias": "livestreet",
+      "title": "LiveStreet",
+      "multiauthor": false
+    },
+    {
+      "alias": "lua",
+      "title": "Lua",
+      "multiauthor": true
+    },
+    {
+      "alias": "macos",
+      "title": "macOS",
+      "multiauthor": true
+    },
+    {
+      "alias": "magento",
+      "title": "Magento",
+      "multiauthor": true
+    },
+    {
+      "alias": "maps-api",
+      "title": "Maps API",
+      "multiauthor": true
+    },
+    {
+      "alias": "matlab",
+      "title": "Matlab",
+      "multiauthor": true
+    },
+    {
+      "alias": "mercurial",
+      "title": "Mercurial",
+      "multiauthor": true
+    },
+    {
+      "alias": "mesh-сети",
+      "title": "Mesh-сети",
+      "multiauthor": true
+    },
+    {
+      "alias": "meteor.js",
+      "title": "Meteor.JS",
+      "multiauthor": true
+    },
+    {
+      "alias": "microsoft-access",
+      "title": "Microsoft Access",
+      "multiauthor": true
+    },
+    {
+      "alias": "microsoft-azure",
+      "title": "Microsoft Azure",
+      "multiauthor": true
+    },
+    {
+      "alias": "microsoft-edge",
+      "title": "Microsoft Edge",
+      "multiauthor": false
+    },
+    {
+      "alias": "microsoft-excel",
+      "title": "Microsoft Excel",
+      "multiauthor": false
+    },
+    {
+      "alias": "microsoft-sql-server",
+      "title": "Microsoft SQL Server",
+      "multiauthor": true
+    },
+    {
+      "alias": "modx",
+      "title": "MODX",
+      "multiauthor": true
+    },
+    {
+      "alias": "mongodb",
+      "title": "MongoDB",
+      "multiauthor": true
+    },
+    {
+      "alias": "mono-и-moonlight",
+      "title": "Mono и Moonlight",
+      "multiauthor": true
+    },
+    {
+      "alias": "mootools",
+      "title": "MooTools",
+      "multiauthor": true
+    },
+    {
+      "alias": "mysql",
+      "title": "MySQL",
+      "multiauthor": true
+    },
+    {
+      "alias": "natural-language-processing",
+      "title": "Natural Language Processing",
+      "multiauthor": true
+    },
+    {
+      "alias": "nestjs",
+      "title": "NestJS",
+      "multiauthor": true
+    },
+    {
+      "alias": "nginx",
+      "title": "Nginx",
+      "multiauthor": true
+    },
+    {
+      "alias": "nosql",
+      "title": "NoSQL",
+      "multiauthor": true
+    },
+    {
+      "alias": "nx",
+      "title": "Nx",
+      "multiauthor": true
+    },
+    {
+      "alias": "objective-c",
+      "title": "Objective C",
+      "multiauthor": true
+    },
+    {
+      "alias": "office-365",
+      "title": "Office 365",
+      "multiauthor": true
+    },
+    {
+      "alias": "openshift",
+      "title": "Openshift",
+      "multiauthor": true
+    },
+    {
+      "alias": "openstreetmap",
+      "title": "OpenStreetMap",
+      "multiauthor": true
+    },
+    {
+      "alias": "opera",
+      "title": "Opera",
+      "multiauthor": false
+    },
+    {
+      "alias": "oracle",
+      "title": "Oracle",
+      "multiauthor": true
+    },
+    {
+      "alias": "pdf",
+      "title": "PDF",
+      "multiauthor": false
+    },
+    {
+      "alias": "perl",
+      "title": "Perl",
+      "multiauthor": true
+    },
+    {
+      "alias": "phalcon",
+      "title": "Phalcon",
+      "multiauthor": true
+    },
+    {
+      "alias": "php",
+      "title": "PHP",
+      "multiauthor": true
+    },
+    {
+      "alias": "postgresql",
+      "title": "PostgreSQL",
+      "multiauthor": true
+    },
+    {
+      "alias": "powershell",
+      "title": "PowerShell",
+      "multiauthor": true
+    },
+    {
+      "alias": "processing",
+      "title": "Processing",
+      "multiauthor": true
+    },
+    {
+      "alias": "prolog",
+      "title": "Prolog",
+      "multiauthor": true
+    },
+    {
+      "alias": "puppet",
+      "title": "Puppet",
+      "multiauthor": true
+    },
+    {
+      "alias": "python",
+      "title": "Python",
+      "multiauthor": true
+    },
+    {
+      "alias": "qt",
+      "title": "Qt",
+      "multiauthor": true
+    },
+    {
+      "alias": "r",
+      "title": "R",
+      "multiauthor": true
+    },
+    {
+      "alias": "raspberry-pi",
+      "title": "Raspberry Pi",
+      "multiauthor": true
+    },
+    {
+      "alias": "react-native",
+      "title": "React Native",
+      "multiauthor": true
+    },
+    {
+      "alias": "reactjs",
+      "title": "ReactJS",
+      "multiauthor": true
+    },
+    {
+      "alias": "ruby",
+      "title": "Ruby",
+      "multiauthor": true
+    },
+    {
+      "alias": "ruby-on-rails",
+      "title": "Ruby on Rails",
+      "multiauthor": true
+    },
+    {
+      "alias": "rust",
+      "title": "Rust",
+      "multiauthor": true
+    },
+    {
+      "alias": "saas-s+s",
+      "title": "SaaS / S+S",
+      "multiauthor": true
+    },
+    {
+      "alias": "safari",
+      "title": "Safari",
+      "multiauthor": false
+    },
+    {
+      "alias": "sailfish-os",
+      "title": "Sailfish OS",
+      "multiauthor": true
+    },
+    {
+      "alias": "san",
+      "title": "SAN",
+      "multiauthor": true
+    },
+    {
+      "alias": "scada",
+      "title": "SCADA",
+      "multiauthor": true
+    },
+    {
+      "alias": "scala",
+      "title": "Scala",
+      "multiauthor": true
+    },
+    {
+      "alias": "serverless",
+      "title": "Serverless",
+      "multiauthor": true
+    },
+    {
+      "alias": "service-desk",
+      "title": "Service Desk",
+      "multiauthor": true
+    },
+    {
+      "alias": "sharepoint",
+      "title": "SharePoint",
+      "multiauthor": true
+    },
+    {
+      "alias": "silverlight",
+      "title": "Silverlight",
+      "multiauthor": true
+    },
+    {
+      "alias": "small-basic",
+      "title": "Small Basic",
+      "multiauthor": true
+    },
+    {
+      "alias": "smalltalk",
+      "title": "Smalltalk",
+      "multiauthor": true
+    },
+    {
+      "alias": "solidity",
+      "title": "Solidity",
+      "multiauthor": true
+    },
+    {
+      "alias": "sphinx",
+      "title": "Sphinx",
+      "multiauthor": true
+    },
+    {
+      "alias": "sql",
+      "title": "SQL",
+      "multiauthor": true
+    },
+    {
+      "alias": "sqlite",
+      "title": "SQLite",
+      "multiauthor": true
+    },
+    {
+      "alias": "sveltejs",
+      "title": "SvelteJS",
+      "multiauthor": true
+    },
+    {
+      "alias": "swift",
+      "title": "Swift",
+      "multiauthor": true
+    },
+    {
+      "alias": "symfony",
+      "title": "Symfony",
+      "multiauthor": true
+    },
+    {
+      "alias": "tarantool",
+      "title": "Tarantool",
+      "multiauthor": true
+    },
+    {
+      "alias": "tdd",
+      "title": "TDD",
+      "multiauthor": true
+    },
+    {
+      "alias": "tensorflow",
+      "title": "TensorFlow",
+      "multiauthor": true
+    },
+    {
+      "alias": "tizen",
+      "title": "Tizen",
+      "multiauthor": true
+    },
+    {
+      "alias": "twisted",
+      "title": "Twisted",
+      "multiauthor": true
+    },
+    {
+      "alias": "typescript",
+      "title": "TypeScript",
+      "multiauthor": true
+    },
+    {
+      "alias": "typo3",
+      "title": "TYPO3",
+      "multiauthor": true
+    },
+    {
+      "alias": "uefi",
+      "title": "UEFI",
+      "multiauthor": true
+    },
+    {
+      "alias": "uml-design",
+      "title": "UML Design",
+      "multiauthor": true
+    },
+    {
+      "alias": "unity",
+      "title": "Unity",
+      "multiauthor": true
+    },
+    {
+      "alias": "unreal-engine",
+      "title": "Unreal Engine",
+      "multiauthor": true
+    },
+    {
+      "alias": "usability",
+      "title": "Usability",
+      "multiauthor": true
+    },
+    {
+      "alias": "vim",
+      "title": "VIM",
+      "multiauthor": true
+    },
+    {
+      "alias": "visual-basic-for-applications",
+      "title": "Visual Basic for Applications",
+      "multiauthor": true
+    },
+    {
+      "alias": "visual-studio",
+      "title": "Visual Studio",
+      "multiauthor": true
+    },
+    {
+      "alias": "vk-api",
+      "title": "VK API",
+      "multiauthor": true
+    },
+    {
+      "alias": "vuejs",
+      "title": "VueJS",
+      "multiauthor": true
+    },
+    {
+      "alias": "webassembly",
+      "title": "WebAssembly",
+      "multiauthor": true
+    },
+    {
+      "alias": "webgl",
+      "title": "WebGL",
+      "multiauthor": true
+    },
+    {
+      "alias": "wiki-проекты",
+      "title": "Wiki-проекты",
+      "multiauthor": true
+    },
+    {
+      "alias": "windows",
+      "title": "Windows",
+      "multiauthor": true
+    },
+    {
+      "alias": "windows-phone",
+      "title": "Windows Phone",
+      "multiauthor": true
+    },
+    {
+      "alias": "wordpress",
+      "title": "WordPress",
+      "multiauthor": true
+    },
+    {
+      "alias": "x-api",
+      "title": "X API",
+      "multiauthor": true
+    },
+    {
+      "alias": "xamarin",
+      "title": "Xamarin",
+      "multiauthor": true
+    },
+    {
+      "alias": "xcode",
+      "title": "Xcode",
+      "multiauthor": true
+    },
+    {
+      "alias": "xml",
+      "title": "XML",
+      "multiauthor": true
+    },
+    {
+      "alias": "xslt",
+      "title": "XSLT",
+      "multiauthor": true
+    },
+    {
+      "alias": "yii",
+      "title": "Yii",
+      "multiauthor": true
+    },
+    {
+      "alias": "zend-framework",
+      "title": "Zend Framework",
+      "multiauthor": true
+    },
+    {
+      "alias": "zig",
+      "title": "Zig",
+      "multiauthor": true
+    },
+    {
+      "alias": "автомобильные-гаджеты",
+      "title": "Автомобильные гаджеты",
+      "multiauthor": false
+    },
+    {
+      "alias": "алгоритмы",
+      "title": "Алгоритмы",
+      "multiauthor": true
+    },
+    {
+      "alias": "анализ-и-проектирование-систем",
+      "title": "Анализ и проектирование систем",
+      "multiauthor": true
+    },
+    {
+      "alias": "аналитика-мобильных-приложений",
+      "title": "Аналитика мобильных приложений",
+      "multiauthor": true
+    },
+    {
+      "alias": "антивирусная-защита",
+      "title": "Антивирусная защита",
+      "multiauthor": true
+    },
+    {
+      "alias": "астрономия",
+      "title": "Астрономия",
+      "multiauthor": false
+    },
+    {
+      "alias": "базы-данных",
+      "title": "Базы данных",
+      "multiauthor": true
+    },
+    {
+      "alias": "беспроводные-технологии",
+      "title": "Беспроводные технологии",
+      "multiauthor": true
+    },
+    {
+      "alias": "библиотека-extjs-sencha",
+      "title": "Библиотека ExtJS/Sencha",
+      "multiauthor": true
+    },
+    {
+      "alias": "бизнес-модели",
+      "title": "Бизнес-модели",
+      "multiauthor": true
+    },
+    {
+      "alias": "биллинговые-системы",
+      "title": "Биллинговые системы",
+      "multiauthor": true
+    },
+    {
+      "alias": "биографии-гиков",
+      "title": "Биографии гиков",
+      "multiauthor": false
+    },
+    {
+      "alias": "биология",
+      "title": "Биология",
+      "multiauthor": false
+    },
+    {
+      "alias": "биотехнологии",
+      "title": "Биотехнологии",
+      "multiauthor": false
+    },
+    {
+      "alias": "браузеры",
+      "title": "Браузеры",
+      "multiauthor": false
+    },
+    {
+      "alias": "брендинг",
+      "title": "Брендинг",
+      "multiauthor": false
+    },
+    {
+      "alias": "будущее-здесь",
+      "title": "Будущее здесь",
+      "multiauthor": false
+    },
+    {
+      "alias": "веб-аналитика",
+      "title": "Веб-аналитика",
+      "multiauthor": true
+    },
+    {
+      "alias": "веб-дизайн",
+      "title": "Веб-дизайн",
+      "multiauthor": true
+    },
+    {
+      "alias": "веб-разработка",
+      "title": "Веб-разработка",
+      "multiauthor": true
+    },
+    {
+      "alias": "векторная-графика",
+      "title": "Векторная графика",
+      "multiauthor": true
+    },
+    {
+      "alias": "венчурные-инвестиции",
+      "title": "Венчурные инвестиции",
+      "multiauthor": false
+    },
+    {
+      "alias": "верстка-писем",
+      "title": "Верстка писем",
+      "multiauthor": true
+    },
+    {
+      "alias": "видеокарты",
+      "title": "Видеокарты",
+      "multiauthor": false
+    },
+    {
+      "alias": "видеоконференцсвязь",
+      "title": "Видеоконференцсвязь",
+      "multiauthor": false
+    },
+    {
+      "alias": "видеотехника",
+      "title": "Видеотехника",
+      "multiauthor": false
+    },
+    {
+      "alias": "визуализация-данных",
+      "title": "Визуализация данных",
+      "multiauthor": true
+    },
+    {
+      "alias": "визуальное-программирование",
+      "title": "Визуальное программирование",
+      "multiauthor": true
+    },
+    {
+      "alias": "виртуализация",
+      "title": "Виртуализация",
+      "multiauthor": true
+    },
+    {
+      "alias": "восстановление-данных",
+      "title": "Восстановление данных",
+      "multiauthor": true
+    },
+    {
+      "alias": "высоконагруженные-системы",
+      "title": "Высоконагруженные системы",
+      "multiauthor": true
+    },
+    {
+      "alias": "гаджеты",
+      "title": "Гаджеты",
+      "multiauthor": false
+    },
+    {
+      "alias": "геоинформационные-сервисы",
+      "title": "Геоинформационные сервисы",
+      "multiauthor": true
+    },
+    {
+      "alias": "говнокод",
+      "title": "Говнокод",
+      "multiauthor": false
+    },
+    {
+      "alias": "голосовые-интерфейсы",
+      "title": "Голосовые интерфейсы",
+      "multiauthor": true
+    },
+    {
+      "alias": "графические-оболочки",
+      "title": "Графические оболочки",
+      "multiauthor": true
+    },
+    {
+      "alias": "графический-дизайн",
+      "title": "Графический дизайн",
+      "multiauthor": true
+    },
+    {
+      "alias": "демосцена",
+      "title": "Демосцена",
+      "multiauthor": true
+    },
+    {
+      "alias": "децентрализованные-сети",
+      "title": "Децентрализованные сети",
+      "multiauthor": true
+    },
+    {
+      "alias": "дизайн",
+      "title": "Дизайн",
+      "multiauthor": false
+    },
+    {
+      "alias": "дизайн-игр",
+      "title": "Дизайн игр",
+      "multiauthor": true
+    },
+    {
+      "alias": "дизайн-мобильных-приложений",
+      "title": "Дизайн мобильных приложений",
+      "multiauthor": true
+    },
+    {
+      "alias": "доменные-имена",
+      "title": "Доменные имена",
+      "multiauthor": true
+    },
+    {
+      "alias": "законодательство-в-it",
+      "title": "Законодательство в IT",
+      "multiauthor": false
+    },
+    {
+      "alias": "занимательные-задачки",
+      "title": "Занимательные задачки",
+      "multiauthor": false
+    },
+    {
+      "alias": "звук",
+      "title": "Звук",
+      "multiauthor": false
+    },
+    {
+      "alias": "здоровье",
+      "title": "Здоровье",
+      "multiauthor": false
+    },
+    {
+      "alias": "игры-и-игровые-консоли",
+      "title": "Игры и игровые консоли",
+      "multiauthor": false
+    },
+    {
+      "alias": "изучение-языков",
+      "title": "Изучение языков",
+      "multiauthor": false
+    },
+    {
+      "alias": "иконки",
+      "title": "Иконки",
+      "multiauthor": true
+    },
+    {
+      "alias": "инженерные-системы",
+      "title": "Инженерные системы",
+      "multiauthor": true
+    },
+    {
+      "alias": "интервью",
+      "title": "Интервью",
+      "multiauthor": false
+    },
+    {
+      "alias": "интернет-вещей",
+      "title": "Интернет вещей",
+      "multiauthor": false
+    },
+    {
+      "alias": "интернет-маркетинг",
+      "title": "Интернет-маркетинг",
+      "multiauthor": true
+    },
+    {
+      "alias": "интерфейсы",
+      "title": "Интерфейсы",
+      "multiauthor": true
+    },
+    {
+      "alias": "инфографика",
+      "title": "Инфографика",
+      "multiauthor": false
+    },
+    {
+      "alias": "информационная-безопасность",
+      "title": "Информационная безопасность",
+      "multiauthor": true
+    },
+    {
+      "alias": "искусственный-интеллект",
+      "title": "Искусственный интеллект",
+      "multiauthor": false
+    },
+    {
+      "alias": "исследования-и-прогнозы-в-it",
+      "title": "Исследования и прогнозы в IT",
+      "multiauthor": true
+    },
+    {
+      "alias": "история-it",
+      "title": "История IT",
+      "multiauthor": false
+    },
+    {
+      "alias": "карьера-в-it-индустрии",
+      "title": "Карьера в IT-индустрии",
+      "multiauthor": false
+    },
+    {
+      "alias": "качество-кода",
+      "title": "Качество кода",
+      "multiauthor": true
+    },
+    {
+      "alias": "квантовые-технологии",
+      "title": "Квантовые технологии",
+      "multiauthor": false
+    },
+    {
+      "alias": "киберпанк",
+      "title": "Киберпанк",
+      "multiauthor": false
+    },
+    {
+      "alias": "киберспорт",
+      "title": "Киберспорт",
+      "multiauthor": false
+    },
+    {
+      "alias": "клиентская-оптимизация",
+      "title": "Клиентская оптимизация",
+      "multiauthor": true
+    },
+    {
+      "alias": "компиляторы",
+      "title": "Компиляторы",
+      "multiauthor": true
+    },
+    {
+      "alias": "компьютерная-анимация",
+      "title": "Компьютерная анимация",
+      "multiauthor": true
+    },
+    {
+      "alias": "компьютерное-железо",
+      "title": "Компьютерное железо",
+      "multiauthor": false
+    },
+    {
+      "alias": "контекстная-реклама",
+      "title": "Контекстная реклама",
+      "multiauthor": true
+    },
+    {
+      "alias": "контент-и-копирайтинг",
+      "title": "Контент и копирайтинг",
+      "multiauthor": true
+    },
+    {
+      "alias": "конференции",
+      "title": "Конференции",
+      "multiauthor": false
+    },
+    {
+      "alias": "копирайт",
+      "title": "Копирайт",
+      "multiauthor": false
+    },
+    {
+      "alias": "космонавтика",
+      "title": "Космонавтика",
+      "multiauthor": false
+    },
+    {
+      "alias": "краудсорсинг",
+      "title": "Краудсорсинг",
+      "multiauthor": false
+    },
+    {
+      "alias": "криптовалюты",
+      "title": "Криптовалюты",
+      "multiauthor": false
+    },
+    {
+      "alias": "криптография",
+      "title": "Криптография",
+      "multiauthor": true
+    },
+    {
+      "alias": "лазеры",
+      "title": "Лазеры",
+      "multiauthor": false
+    },
+    {
+      "alias": "лайфхаки-для-гиков",
+      "title": "Лайфхаки для гиков",
+      "multiauthor": false
+    },
+    {
+      "alias": "логические-игры",
+      "title": "Логические игры",
+      "multiauthor": false
+    },
+    {
+      "alias": "локализация-продуктов",
+      "title": "Локализация продуктов",
+      "multiauthor": true
+    },
+    {
+      "alias": "любительская-радиосвязь",
+      "title": "Любительская радиосвязь",
+      "multiauthor": false
+    },
+    {
+      "alias": "математика",
+      "title": "Математика",
+      "multiauthor": true
+    },
+    {
+      "alias": "машинное-обучение",
+      "title": "Машинное обучение",
+      "multiauthor": true
+    },
+    {
+      "alias": "медгаджеты",
+      "title": "Медгаджеты",
+      "multiauthor": false
+    },
+    {
+      "alias": "медийная-реклама",
+      "title": "Медийная реклама",
+      "multiauthor": true
+    },
+    {
+      "alias": "мессенджеры",
+      "title": "Мессенджеры",
+      "multiauthor": true
+    },
+    {
+      "alias": "микросервисы",
+      "title": "Микросервисы",
+      "multiauthor": true
+    },
+    {
+      "alias": "микроформаты",
+      "title": "Микроформаты",
+      "multiauthor": true
+    },
+    {
+      "alias": "мозг",
+      "title": "Мозг",
+      "multiauthor": false
+    },
+    {
+      "alias": "монетизация-it-систем",
+      "title": "Монетизация IT-систем",
+      "multiauthor": true
+    },
+    {
+      "alias": "монетизация-веб-сервисов",
+      "title": "Монетизация веб-сервисов",
+      "multiauthor": true
+    },
+    {
+      "alias": "монетизация-игр",
+      "title": "Монетизация игр",
+      "multiauthor": true
+    },
+    {
+      "alias": "монетизация-мобильных-приложений",
+      "title": "Монетизация мобильных приложений",
+      "multiauthor": true
+    },
+    {
+      "alias": "мониторы-и-тв",
+      "title": "Мониторы и ТВ",
+      "multiauthor": false
+    },
+    {
+      "alias": "мультикоптеры",
+      "title": "Мультикоптеры",
+      "multiauthor": false
+    },
+    {
+      "alias": "накопители",
+      "title": "Накопители",
+      "multiauthor": false
+    },
+    {
+      "alias": "нанотехнологии",
+      "title": "Нанотехнологии",
+      "multiauthor": false
+    },
+    {
+      "alias": "настольные-компьютеры",
+      "title": "Настольные компьютеры",
+      "multiauthor": false
+    },
+    {
+      "alias": "настройка-linux",
+      "title": "Настройка Linux",
+      "multiauthor": true
+    },
+    {
+      "alias": "научная-фантастика",
+      "title": "Научная фантастика",
+      "multiauthor": false
+    },
+    {
+      "alias": "научно-популярное",
+      "title": "Научно-популярное",
+      "multiauthor": false
+    },
+    {
+      "alias": "ненормальное-программирование",
+      "title": "Ненормальное программирование",
+      "multiauthor": true
+    },
+    {
+      "alias": "носимая-электроника",
+      "title": "Носимая электроника",
+      "multiauthor": false
+    },
+    {
+      "alias": "ноутбуки",
+      "title": "Ноутбуки",
+      "multiauthor": false
+    },
+    {
+      "alias": "облачные-вычисления",
+      "title": "Облачные вычисления",
+      "multiauthor": true
+    },
+    {
+      "alias": "облачные-сервисы",
+      "title": "Облачные сервисы",
+      "multiauthor": true
+    },
+    {
+      "alias": "оболочки",
+      "title": "Оболочки",
+      "multiauthor": true
+    },
+    {
+      "alias": "обработка-изображений",
+      "title": "Обработка изображений",
+      "multiauthor": true
+    },
+    {
+      "alias": "образование-за-рубежом",
+      "title": "Образование за рубежом",
+      "multiauthor": false
+    },
+    {
+      "alias": "ооп",
+      "title": "ООП",
+      "multiauthor": true
+    },
+    {
+      "alias": "операционные-системы",
+      "title": "Операционные системы",
+      "multiauthor": false
+    },
+    {
+      "alias": "открытые-данные",
+      "title": "Открытые данные",
+      "multiauthor": true
+    },
+    {
+      "alias": "отладка",
+      "title": "Отладка",
+      "multiauthor": true
+    },
+    {
+      "alias": "офисы-it-компаний",
+      "title": "Офисы IT-компаний",
+      "multiauthor": false
+    },
+    {
+      "alias": "параллельное-программирование",
+      "title": "Параллельное программирование",
+      "multiauthor": true
+    },
+    {
+      "alias": "патентование",
+      "title": "Патентование",
+      "multiauthor": true
+    },
+    {
+      "alias": "периферия",
+      "title": "Периферия",
+      "multiauthor": false
+    },
+    {
+      "alias": "планшеты",
+      "title": "Планшеты",
+      "multiauthor": false
+    },
+    {
+      "alias": "платежные-системы",
+      "title": "Платежные системы",
+      "multiauthor": true
+    },
+    {
+      "alias": "повышение-конверсии",
+      "title": "Повышение конверсии",
+      "multiauthor": true
+    },
+    {
+      "alias": "подготовка-технической-документации",
+      "title": "Подготовка технической документации",
+      "multiauthor": true
+    },
+    {
+      "alias": "поисковая-оптимизация",
+      "title": "Поисковая оптимизация",
+      "multiauthor": true
+    },
+    {
+      "alias": "поисковые-технологии",
+      "title": "Поисковые технологии",
+      "multiauthor": true
+    },
+    {
+      "alias": "презентации",
+      "title": "Презентации",
+      "multiauthor": false
+    },
+    {
+      "alias": "программирование",
+      "title": "Программирование",
+      "multiauthor": true
+    },
+    {
+      "alias": "программирование-микроконтроллеров",
+      "title": "Программирование микроконтроллеров",
+      "multiauthor": true
+    },
+    {
+      "alias": "продвижение-игр",
+      "title": "Продвижение игр",
+      "multiauthor": true
+    },
+    {
+      "alias": "проектирование-api",
+      "title": "Проектирование API",
+      "multiauthor": true
+    },
+    {
+      "alias": "проектирование-и-рефакторинг",
+      "title": "Проектирование и рефакторинг",
+      "multiauthor": true
+    },
+    {
+      "alias": "производство-и-разработка-электроники",
+      "title": "Производство и разработка электроники",
+      "multiauthor": true
+    },
+    {
+      "alias": "промышленное-программирование",
+      "title": "Промышленное программирование",
+      "multiauthor": true
+    },
+    {
+      "alias": "прототипирование",
+      "title": "Прототипирование",
+      "multiauthor": true
+    },
+    {
+      "alias": "профессиональная-литература",
+      "title": "Профессиональная литература",
+      "multiauthor": true
+    },
+    {
+      "alias": "процессоры",
+      "title": "Процессоры",
+      "multiauthor": false
+    },
+    {
+      "alias": "работа-с-видео",
+      "title": "Работа с видео",
+      "multiauthor": true
+    },
+    {
+      "alias": "развитие-стартапа",
+      "title": "Развитие стартапа",
+      "multiauthor": false
+    },
+    {
+      "alias": "разработка-игр",
+      "title": "Разработка игр",
+      "multiauthor": true
+    },
+    {
+      "alias": "разработка-мобильных-приложений",
+      "title": "Разработка мобильных приложений",
+      "multiauthor": true
+    },
+    {
+      "alias": "разработка-под-e-commerce",
+      "title": "Разработка под e-commerce",
+      "multiauthor": true
+    },
+    {
+      "alias": "разработка-публичных-облаков",
+      "title": "Разработка публичных облаков",
+      "multiauthor": true
+    },
+    {
+      "alias": "распределённые-системы",
+      "title": "Распределённые системы",
+      "multiauthor": true
+    },
+    {
+      "alias": "расширения-для-браузеров",
+      "title": "Расширения для браузеров",
+      "multiauthor": false
+    },
+    {
+      "alias": "реверс-инжиниринг",
+      "title": "Реверс-инжиниринг",
+      "multiauthor": true
+    },
+    {
+      "alias": "регулярные-выражения",
+      "title": "Регулярные выражения",
+      "multiauthor": true
+    },
+    {
+      "alias": "резервное-копирование",
+      "title": "Резервное копирование",
+      "multiauthor": true
+    },
+    {
+      "alias": "робототехника",
+      "title": "Робототехника",
+      "multiauthor": false
+    },
+    {
+      "alias": "семантические-сети",
+      "title": "Семантические сети",
+      "multiauthor": true
+    },
+    {
+      "alias": "серверная-оптимизация",
+      "title": "Серверная оптимизация",
+      "multiauthor": true
+    },
+    {
+      "alias": "серверное-администрирование",
+      "title": "Серверное администрирование",
+      "multiauthor": true
+    },
+    {
+      "alias": "сетевое-оборудование",
+      "title": "Сетевое оборудование",
+      "multiauthor": false
+    },
+    {
+      "alias": "сетевые-технологии",
+      "title": "Сетевые технологии",
+      "multiauthor": true
+    },
+    {
+      "alias": "сжатие-данных",
+      "title": "Сжатие данных",
+      "multiauthor": true
+    },
+    {
+      "alias": "системное-администрирование",
+      "title": "Системное администрирование",
+      "multiauthor": true
+    },
+    {
+      "alias": "системное-программирование",
+      "title": "Системное программирование",
+      "multiauthor": true
+    },
+    {
+      "alias": "системы-сборки",
+      "title": "Системы сборки",
+      "multiauthor": true
+    },
+    {
+      "alias": "системы-связи",
+      "title": "Системы связи",
+      "multiauthor": true
+    },
+    {
+      "alias": "системы-управления-версиями",
+      "title": "Системы управления версиями",
+      "multiauthor": true
+    },
+    {
+      "alias": "смартфоны",
+      "title": "Смартфоны",
+      "multiauthor": false
+    },
+    {
+      "alias": "сотовая-связь",
+      "title": "Сотовая связь",
+      "multiauthor": false
+    },
+    {
+      "alias": "софт",
+      "title": "Софт",
+      "multiauthor": false
+    },
+    {
+      "alias": "социальные-сети",
+      "title": "Социальные сети",
+      "multiauthor": false
+    },
+    {
+      "alias": "спам-и-антиспам",
+      "title": "Спам и антиспам",
+      "multiauthor": false
+    },
+    {
+      "alias": "спортивное-программирование",
+      "title": "Спортивное программирование",
+      "multiauthor": true
+    },
+    {
+      "alias": "спутниковые-системы-навигации",
+      "title": "Спутниковые системы навигации",
+      "multiauthor": true
+    },
+    {
+      "alias": "стандарты-связи",
+      "title": "Стандарты связи",
+      "multiauthor": true
+    },
+    {
+      "alias": "старое-железо",
+      "title": "Старое железо",
+      "multiauthor": false
+    },
+    {
+      "alias": "статистика-в-it",
+      "title": "Статистика в IT",
+      "multiauthor": false
+    },
+    {
+      "alias": "суперкомпьютеры",
+      "title": "Суперкомпьютеры",
+      "multiauthor": false
+    },
+    {
+      "alias": "схемотехника",
+      "title": "Схемотехника",
+      "multiauthor": true
+    },
+    {
+      "alias": "текстовые-редакторы-и-ide",
+      "title": "Текстовые редакторы и IDE",
+      "multiauthor": true
+    },
+    {
+      "alias": "телемедицина",
+      "title": "Телемедицина",
+      "multiauthor": false
+    },
+    {
+      "alias": "терминология-it",
+      "title": "Терминология IT",
+      "multiauthor": false
+    },
+    {
+      "alias": "тестирование-it-систем",
+      "title": "Тестирование IT-систем",
+      "multiauthor": true
+    },
+    {
+      "alias": "тестирование-веб-сервисов",
+      "title": "Тестирование веб-сервисов",
+      "multiauthor": true
+    },
+    {
+      "alias": "тестирование-игр",
+      "title": "Тестирование игр",
+      "multiauthor": true
+    },
+    {
+      "alias": "тестирование-мобильных-приложений",
+      "title": "Тестирование мобильных приложений",
+      "multiauthor": true
+    },
+    {
+      "alias": "типографика",
+      "title": "Типографика",
+      "multiauthor": true
+    },
+    {
+      "alias": "транспорт",
+      "title": "Транспорт",
+      "multiauthor": false
+    },
+    {
+      "alias": "удалённая-работа",
+      "title": "Удалённая работа",
+      "multiauthor": false
+    },
+    {
+      "alias": "умный-дом",
+      "title": "Умный дом",
+      "multiauthor": false
+    },
+    {
+      "alias": "управление-e-commerce",
+      "title": "Управление e-commerce",
+      "multiauthor": true
+    },
+    {
+      "alias": "управление-медиа",
+      "title": "Управление медиа",
+      "multiauthor": true
+    },
+    {
+      "alias": "управление-персоналом",
+      "title": "Управление персоналом",
+      "multiauthor": true
+    },
+    {
+      "alias": "управление-продажами",
+      "title": "Управление продажами",
+      "multiauthor": true
+    },
+    {
+      "alias": "управление-продуктом",
+      "title": "Управление продуктом",
+      "multiauthor": true
+    },
+    {
+      "alias": "управление-проектами",
+      "title": "Управление проектами",
+      "multiauthor": true
+    },
+    {
+      "alias": "управление-разработкой",
+      "title": "Управление разработкой",
+      "multiauthor": true
+    },
+    {
+      "alias": "управление-сообществом",
+      "title": "Управление сообществом",
+      "multiauthor": true
+    },
+    {
+      "alias": "урбанизм",
+      "title": "Урбанизм",
+      "multiauthor": false
+    },
+    {
+      "alias": "учебный-процесс-в-it",
+      "title": "Учебный процесс в IT",
+      "multiauthor": false
+    },
+    {
+      "alias": "физика",
+      "title": "Физика",
+      "multiauthor": false
+    },
+    {
+      "alias": "финансы-в-it",
+      "title": "Финансы в IT",
+      "multiauthor": false
+    },
+    {
+      "alias": "фототехника",
+      "title": "Фототехника",
+      "multiauthor": false
+    },
+    {
+      "alias": "фриланс",
+      "title": "Фриланс",
+      "multiauthor": false
+    },
+    {
+      "alias": "функциональное-программирование",
+      "title": "Функциональное программирование",
+      "multiauthor": true
+    },
+    {
+      "alias": "хакатоны",
+      "title": "Хакатоны",
+      "multiauthor": false
+    },
+    {
+      "alias": "химия",
+      "title": "Химия",
+      "multiauthor": false
+    },
+    {
+      "alias": "хостинг",
+      "title": "Хостинг",
+      "multiauthor": false
+    },
+    {
+      "alias": "хранение-данных",
+      "title": "Хранение данных",
+      "multiauthor": true
+    },
+    {
+      "alias": "читальный-зал",
+      "title": "Читальный зал",
+      "multiauthor": false
+    },
+    {
+      "alias": "экология",
+      "title": "Экология",
+      "multiauthor": false
+    },
+    {
+      "alias": "электроника-для-начинающих",
+      "title": "Электроника для начинающих",
+      "multiauthor": false
+    },
+    {
+      "alias": "энергия-и-элементы-питания",
+      "title": "Энергия и элементы питания",
+      "multiauthor": false
+    },
+    {
+      "alias": "яндекс-api",
+      "title": "Яндекс API",
+      "multiauthor": true
+    }
+  ]
+}
