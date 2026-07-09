@@ -15,6 +15,8 @@ export const STATE_SCHEMA_URL =
     'https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/schemas/habr-state.schema.json';
 export const HUBS_REGISTRY_URL =
     'https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/habr-hubs.json';
+export const FORMATS_REGISTRY_URL =
+    'https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/habr-formats.json';
 
 export const DEFAULT_MAX_HUBS = 5;
 export const DEFAULT_MAX_TAGS = 10;
@@ -24,25 +26,30 @@ const LEAD_EXCERPT_LEN = 600;
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ASSETS_DIR = join(HERE, '..', 'assets');
 const HUBS_REGISTRY_PATH = join(ASSETS_DIR, 'habr-hubs.json');
+const FORMATS_REGISTRY_PATH = join(ASSETS_DIR, 'habr-formats.json');
 
 const TEXT = {
     ru: {
         slugQuestion: 'Какой slug статьи подготавливаем для Habr?',
         notReady: 'Сначала заверши article-scaffold и напиши черновики act-*.md файлов.',
-        needsApply: 'Хабы и теги выбраны. Запусти habr-apply.mjs, чтобы записать их в index.md.',
+        needsApply: 'Формат, хабы и теги выбраны. Запусти habr-apply.mjs, чтобы записать их в index.md.',
+        askFormat: 'Определи формат статьи из списка Habr и спроси подтверждение. Покажи value и русское название.',
         askHubs: 'Предложи до 5 тематических хабов из реестра (prefer multiauthor) и спроси подтверждение. Покажи кандидатов с пометкой, можно ли в них публиковать.',
         askTags: 'Предложи до 10 тегов (lowercase, устоявшиеся на Habr) и спроси подтверждение.',
-        allDone: 'Хабы и теги применены в index.md.',
+        allDone: 'Формат, хабы и теги применены в index.md.',
+        noFormatSelected: 'Формат ещё не выбран.',
         noHubsSelected: 'Хабы ещё не выбраны.',
         noTagsSelected: 'Теги ещё не выбраны.',
     },
     en: {
         slugQuestion: 'Which article slug are we preparing for Habr?',
         notReady: 'Run article-scaffold and draft the act-*.md files first.',
-        needsApply: 'Hubs and tags are chosen. Run habr-apply.mjs to write them into index.md.',
+        needsApply: 'Format, hubs and tags are chosen. Run habr-apply.mjs to write them into index.md.',
+        askFormat: 'Pick the Habr article format from the registry and ask the user to confirm. Show value and English title.',
         askHubs: 'Propose up to 5 thematic hubs from the registry (prefer multiauthor) and ask the user to confirm. Mark whether each candidate accepts posts.',
         askTags: 'Propose up to 10 tags (lowercase, established on Habr) and ask the user to confirm.',
-        allDone: 'Hubs and tags have been applied to index.md.',
+        allDone: 'Format, hubs and tags have been applied to index.md.',
+        noFormatSelected: 'No format selected yet.',
         noHubsSelected: 'No hubs selected yet.',
         noTagsSelected: 'No tags selected yet.',
     },
@@ -101,7 +108,7 @@ export function printUsage(command) {
     const extra = {
         'habr-status.mjs': '',
         'habr-resume.mjs': ' [--new]',
-        'habr-answer.mjs': ' --field <hubs|tags> --value <comma-separated>',
+        'habr-answer.mjs': ' --field <format|hubs|tags> --value <value-or-comma-separated>',
         'habr-apply.mjs': ' [--force] [--dry-run]',
     }[command];
 
@@ -115,9 +122,9 @@ Flags:
   --chat-title <t>    Alias for --thread-title
   --language ru|en    Output language when scaffold state cannot provide it
   --new               (resume) ignore saved habr state and start over
-  --field <hubs|tags> (answer) which selection to save
-  --value <list>      (answer) comma-separated hubs (titles/aliases) or tags
-  --force             (apply) overwrite non-empty tags/hubs in index.md instead of writing *.new
+  --field <f>         (answer) format | hubs | tags
+  --value <v>         (answer) format value/title, or comma-separated hubs/tags
+  --force             (apply) overwrite non-empty format/tags/hubs in index.md instead of writing *.new
   --dry-run           Show intended changes without writing files
   --json              Print machine-readable JSON
   --help              Show this help
@@ -129,6 +136,13 @@ export function loadHubRegistry() {
         throw new Error(`Habr hubs registry not found: ${HUBS_REGISTRY_PATH}`);
     }
     return JSON.parse(readFileSync(HUBS_REGISTRY_PATH, 'utf8'));
+}
+
+export function loadFormatRegistry() {
+    if (!existsSync(FORMATS_REGISTRY_PATH)) {
+        throw new Error(`Habr formats registry not found: ${FORMATS_REGISTRY_PATH}`);
+    }
+    return JSON.parse(readFileSync(FORMATS_REGISTRY_PATH, 'utf8'));
 }
 
 export function buildContext(opts = {}) {
@@ -156,6 +170,7 @@ export function buildContext(opts = {}) {
     const statePath = slug ? join(habrDir, `${slug}.json`) : null;
     const existingState = (opts.new ? null : readJson(statePath)) || null;
     const registry = loadHubRegistry();
+    const formatRegistry = loadFormatRegistry();
     const title =
         stringOrNull(scaffoldState?.title) ||
         (articleDir ? readTitleFromIndex(indexPath) : null) ||
@@ -195,6 +210,7 @@ export function buildContext(opts = {}) {
         statePath,
         existingState,
         registry,
+        formatRegistry,
         maxHubs: registry?.limits?.maxHubs ?? DEFAULT_MAX_HUBS,
         maxTags: registry?.limits?.maxTags ?? DEFAULT_MAX_TAGS,
     };
@@ -213,6 +229,7 @@ export function createStatusResponse(ctx) {
     const frontmatter = ctx.indexContent ? parseFrontmatter(ctx.indexContent) : null;
     const fmHubs = frontmatter ? readArrayField(frontmatter, 'hubs') : [];
     const fmTags = frontmatter ? readArrayField(frontmatter, 'tags') : [];
+    const fmFormat = frontmatter ? readScalarField(frontmatter, 'format') : null;
 
     return publicContext(ctx, {
         phase: 'habr',
@@ -220,14 +237,16 @@ export function createStatusResponse(ctx) {
         currentQuestion,
         ready: Boolean(ctx.slug && ctx.articleExists),
         complete: isApplied(state),
+        format: state?.format || null,
         hubs: state?.hubs || [],
         tags: state?.tags || [],
         maxHubs: ctx.maxHubs,
         maxTags: ctx.maxTags,
         indexFrontmatter: ctx.indexContent
-            ? { present: Boolean(frontmatter), hubs: fmHubs, tags: fmTags }
+            ? { present: Boolean(frontmatter), format: fmFormat, hubs: fmHubs, tags: fmTags }
             : null,
         registry: registrySummary(ctx.registry),
+        formats: formatsSummary(ctx.formatRegistry, ctx.language),
         next: nextStep(ctx, 'status'),
     });
 }
@@ -246,10 +265,12 @@ export function createResumeResponse(ctx) {
     }
 
     const state = ctx.existingState || buildInitialState(ctx);
+    ensureStateShape(ctx, state);
     const cursor = computeCursor(state);
     const l = labels(ctx.language);
 
     const articleContext = buildArticleContext(ctx);
+    const formats = formatsSummary(ctx.formatRegistry, ctx.language);
 
     if (!cursor) {
         const applied = isApplied(state);
@@ -258,18 +279,47 @@ export function createResumeResponse(ctx) {
             action: applied ? 'all_done' : 'needs_apply',
             ready: true,
             complete: applied,
+            format: state.format,
             hubs: state.hubs,
             tags: state.tags,
             maxHubs: ctx.maxHubs,
             maxTags: ctx.maxTags,
             cursor: null,
             articleContext,
+            formats,
             message: applied ? l.allDone : l.needsApply,
             next: {
                 recommendation: applied
-                    ? 'Nothing to do — hubs and tags are already applied to index.md.'
-                    : 'Run habr-apply.mjs to write the chosen hubs and tags into index.md.',
+                    ? 'Nothing to do — format, hubs and tags are already applied to index.md.'
+                    : 'Run habr-apply.mjs to write the chosen format, hubs and tags into index.md.',
             },
+        });
+    }
+
+    if (cursor.phase === 'format') {
+        return publicContext(ctx, {
+            phase: 'habr',
+            action: 'needs_format',
+            ready: true,
+            complete: false,
+            cursor,
+            format: state.format,
+            hubs: state.hubs,
+            tags: state.tags,
+            maxHubs: ctx.maxHubs,
+            maxTags: ctx.maxTags,
+            articleContext,
+            formats,
+            currentQuestion: {
+                id: 'format',
+                kind: 'choice',
+                question: l.askFormat,
+            },
+            instructions: [
+                `Pick exactly one format from formats.items (value or localized title).`,
+                'Infer the format from articleContext (title, lead, brief). Prefer a specific format over common when the article clearly matches one.',
+                'Save with habr-answer.mjs --field format --value "<value-or-title>".',
+            ],
         });
     }
 
@@ -280,12 +330,14 @@ export function createResumeResponse(ctx) {
             ready: true,
             complete: false,
             cursor,
+            format: state.format,
             hubs: state.hubs,
             tags: state.tags,
             maxHubs: ctx.maxHubs,
             maxTags: ctx.maxTags,
             articleContext,
             registry: registrySummary(ctx.registry),
+            formats,
             currentQuestion: {
                 id: 'hubs',
                 kind: 'multi_choice',
@@ -305,11 +357,13 @@ export function createResumeResponse(ctx) {
         ready: true,
         complete: false,
         cursor,
+        format: state.format,
         hubs: state.hubs,
         tags: state.tags,
         maxHubs: ctx.maxHubs,
         maxTags: ctx.maxTags,
         articleContext,
+        formats,
         currentQuestion: {
             id: 'tags',
             kind: 'multi_choice',
@@ -333,13 +387,22 @@ export function saveAnswer(ctx, opts) {
             message: labels(ctx.language).notReady,
         });
     }
-    if (!opts.field) throw new Error('--field is required for habr-answer.mjs (hubs | tags)');
+    if (!opts.field) throw new Error('--field is required for habr-answer.mjs (format | hubs | tags)');
     if (opts.value == null) throw new Error('--value is required for habr-answer.mjs');
 
     const state = ctx.existingState || buildInitialState(ctx);
     ensureStateShape(ctx, state);
 
-    if (opts.field === 'hubs') {
+    if (opts.field === 'format') {
+        const match = matchFormat(opts.value, ctx.formatRegistry, ctx.language);
+        if (!match) {
+            const allowed = (ctx.formatRegistry?.formats || [])
+                .map((f) => `${f.value} (${f.title?.ru || f.title?.en || f.value})`)
+                .join(', ');
+            throw new Error(`Unknown format: ${opts.value}. Use one of: ${allowed}.`);
+        }
+        state.format = match;
+    } else if (opts.field === 'hubs') {
         const inputs = splitList(opts.value);
         const resolved = [];
         const errors = [];
@@ -401,6 +464,7 @@ export function saveAnswer(ctx, opts) {
         ready: true,
         complete: isApplied(state),
         field: opts.field,
+        format: state.format,
         hubs: state.hubs,
         tags: state.tags,
         maxHubs: ctx.maxHubs,
@@ -426,6 +490,10 @@ export function applyHabr(ctx, opts) {
     if (!state) {
         throw new Error('No habr state found. Run habr-resume and habr-answer first.');
     }
+    ensureStateShape(ctx, state);
+    if (!state.format) {
+        throw new Error('Format is not selected. Run habr-answer --field format first.');
+    }
     if (state.hubs.length === 0 && state.tags.length === 0) {
         throw new Error('Nothing to apply — hubs and tags are both empty. Run habr-answer first.');
     }
@@ -434,17 +502,21 @@ export function applyHabr(ctx, opts) {
     const fm = parseFrontmatter(indexContent);
     const existingHubs = fm ? readArrayField(fm, 'hubs') : [];
     const existingTags = fm ? readArrayField(fm, 'tags') : [];
+    const existingFormat = fm ? readScalarField(fm, 'format') : null;
 
     const newHubTitles = state.hubs.map((h) => h.title);
     const newTags = state.tags;
+    const newFormat = state.format.value;
 
     const hubsDiff = !shallowEqual(existingHubs, newHubTitles);
     const tagsDiff = !shallowEqual(existingTags, newTags);
+    const formatDiff = existingFormat !== newFormat;
     const hubsOccupied = existingHubs.length > 0 && hubsDiff;
     const tagsOccupied = existingTags.length > 0 && tagsDiff;
-    const hasConflict = (hubsOccupied || tagsOccupied) && !opts.force;
+    const formatOccupied = Boolean(existingFormat) && existingFormat !== 'common' && formatDiff;
+    const hasConflict = (hubsOccupied || tagsOccupied || formatOccupied) && !opts.force;
 
-    const nextContent = renderIndexWithFrontmatter(indexContent, fm, newHubTitles, newTags);
+    const nextContent = renderIndexWithFrontmatter(indexContent, fm, newHubTitles, newTags, newFormat);
     const targetPath = hasConflict ? `${ctx.indexPath}.new` : ctx.indexPath;
 
     const actions = [];
@@ -454,7 +526,7 @@ export function applyHabr(ctx, opts) {
             status: opts.dryRun ? 'would-write-suggestion' : 'suggestion-written',
             conflict: true,
         });
-    } else if (!hubsDiff && !tagsDiff) {
+    } else if (!hubsDiff && !tagsDiff && !formatDiff) {
         actions.push({
             path: rel(ctx.target, ctx.indexPath),
             status: 'unchanged',
@@ -471,7 +543,7 @@ export function applyHabr(ctx, opts) {
     const conflicts = hasConflict ? [rel(ctx.target, ctx.indexPath)] : [];
 
     if (!opts.dryRun) {
-        if (hasConflict || hubsDiff || tagsDiff) {
+        if (hasConflict || hubsDiff || tagsDiff || formatDiff) {
             writeFileSync(targetPath, nextContent, 'utf8');
         }
         const now = new Date().toISOString();
@@ -489,6 +561,7 @@ export function applyHabr(ctx, opts) {
         complete: isApplied(state),
         force: opts.force,
         dryRun: opts.dryRun,
+        format: state.format,
         hubs: state.hubs,
         tags: state.tags,
         maxHubs: ctx.maxHubs,
@@ -509,6 +582,7 @@ export function outputResult(result, opts, humanFormatter) {
 export function formatStatusHuman(result) {
     const lines = [`Article habr: ${result.slug || 'slug required'}`, `Status: ${result.action}`];
     if (result.currentQuestion) lines.push(`Question: ${result.currentQuestion.question}`);
+    lines.push(`Format: ${result.format ? `${result.format.value} (${result.format.title})` : '—'}`);
     lines.push(`Hubs (${result.hubs?.length || 0}/${result.maxHubs}): ${(result.hubs || []).map((h) => h.title).join(', ') || '—'}`);
     lines.push(`Tags (${result.tags?.length || 0}/${result.maxTags}): ${(result.tags || []).join(', ') || '—'}`);
     if (result.next?.recommendation) lines.push(`Next: ${result.next.recommendation}`);
@@ -519,6 +593,7 @@ export function formatResumeHuman(result) {
     const lines = [`Article habr resume: ${result.slug || 'slug required'}`, `Action: ${result.action}`];
     if (result.cursor) lines.push(`Cursor: ${result.cursor.phase}`);
     if (result.articleContext?.title) lines.push(`Title: ${result.articleContext.title}`);
+    lines.push(`Format: ${result.format ? `${result.format.value} (${result.format.title})` : '—'}`);
     lines.push(`Hubs: ${(result.hubs || []).map((h) => h.title).join(', ') || '—'}`);
     lines.push(`Tags: ${(result.tags || []).join(', ') || '—'}`);
     if (result.message) lines.push(result.message);
@@ -528,7 +603,9 @@ export function formatResumeHuman(result) {
 
 export function formatAnswerHuman(result) {
     const lines = [`Article habr answer: ${result.slug || 'slug required'}`, `Action: ${result.action}`];
-    if (result.field === 'hubs') {
+    if (result.field === 'format') {
+        lines.push(`Format: ${result.format ? `${result.format.value} (${result.format.title})` : '—'}`);
+    } else if (result.field === 'hubs') {
         lines.push(`Hubs: ${(result.hubs || []).map((h) => `${h.title}${h.multiauthor ? ' *' : ''}`).join(', ') || '—'}`);
     } else if (result.field === 'tags') {
         lines.push(`Tags: ${(result.tags || []).join(', ') || '—'}`);
@@ -574,9 +651,10 @@ function buildInitialState(ctx) {
         articleDir: ctx.slug,
         maxHubs: ctx.maxHubs,
         maxTags: ctx.maxTags,
+        format: null,
         hubs: [],
         tags: [],
-        cursor: { phase: 'hubs' },
+        cursor: { phase: 'format' },
         appliedAt: null,
     };
 }
@@ -584,6 +662,7 @@ function buildInitialState(ctx) {
 function ensureStateShape(ctx, state) {
     if (!Array.isArray(state.hubs)) state.hubs = [];
     if (!Array.isArray(state.tags)) state.tags = [];
+    if (state.format === undefined) state.format = null;
     state.maxHubs = ctx.maxHubs;
     state.maxTags = ctx.maxTags;
     state.slug = state.slug || ctx.slug;
@@ -595,11 +674,14 @@ function ensureStateShape(ctx, state) {
     state.version = state.version || STATE_VERSION;
     state.generatedBy = state.generatedBy || SKILL_NAME;
     state.createdAt = state.createdAt || new Date().toISOString();
-    state.appliedAt = null;
+    if (state.appliedAt === undefined) state.appliedAt = null;
     state.cursor = computeCursor(state);
 }
 
 function computeCursor(state) {
+    if (!state.format) {
+        return { phase: 'format' };
+    }
     if (!Array.isArray(state.hubs) || state.hubs.length === 0) {
         return { phase: 'hubs' };
     }
@@ -610,7 +692,7 @@ function computeCursor(state) {
 }
 
 function isApplied(state) {
-    return Boolean(state?.appliedAt) && (state?.hubs?.length > 0 || state?.tags?.length > 0);
+    return Boolean(state?.appliedAt) && Boolean(state?.format) && (state?.hubs?.length > 0 || state?.tags?.length > 0);
 }
 
 function buildArticleContext(ctx) {
@@ -644,6 +726,32 @@ function matchHub(input, registry) {
     const normalized = normalizeHubAlias(raw);
     const byNorm = hubs.find((h) => h.alias.toLowerCase() === normalized || normalizeHubAlias(h.title) === normalized);
     if (byNorm) return { alias: byNorm.alias, title: byNorm.title, multiauthor: byNorm.multiauthor };
+    return null;
+}
+
+function matchFormat(input, formatRegistry, language) {
+    const raw = String(input).trim().toLowerCase();
+    if (!raw) return null;
+    const formats = Array.isArray(formatRegistry?.formats) ? formatRegistry.formats : [];
+    const lang = normalizeLanguage(language);
+    const byValue = formats.find((f) => f.value.toLowerCase() === raw);
+    if (byValue) {
+        return {
+            value: byValue.value,
+            title: byValue.title?.[lang] || byValue.title?.ru || byValue.value,
+        };
+    }
+    const byTitle = formats.find((f) => {
+        const ru = String(f.title?.ru || '').toLowerCase();
+        const en = String(f.title?.en || '').toLowerCase();
+        return ru === raw || en === raw;
+    });
+    if (byTitle) {
+        return {
+            value: byTitle.value,
+            title: byTitle.title?.[lang] || byTitle.title?.ru || byTitle.value,
+        };
+    }
     return null;
 }
 
@@ -683,6 +791,23 @@ function registrySummary(registry) {
     };
 }
 
+function formatsSummary(formatRegistry, language) {
+    const lang = normalizeLanguage(language);
+    const items = (Array.isArray(formatRegistry?.formats) ? formatRegistry.formats : []).map((f) => ({
+        value: f.value,
+        title: f.title?.[lang] || f.title?.ru || f.value,
+        titleRu: f.title?.ru || null,
+        titleEn: f.title?.en || null,
+    }));
+    return {
+        source: formatRegistry?.source || null,
+        fetchedAt: formatRegistry?.fetchedAt || null,
+        formatCount: formatRegistry?.formatCount ?? items.length,
+        registryPath: FORMATS_REGISTRY_PATH,
+        items,
+    };
+}
+
 function parseFrontmatter(text) {
     if (!text) return null;
     const lines = text.split(/\r?\n/);
@@ -711,12 +836,20 @@ function readArrayField(fm, key) {
         .filter((part) => part.length > 0);
 }
 
-function renderIndexWithFrontmatter(text, fm, hubTitles, tags) {
+function readScalarField(fm, key) {
+    const line = fm.lines.find((l) => new RegExp(`^${key}\\s*:`).test(l));
+    if (!line) return null;
+    const value = line.slice(line.indexOf(':') + 1).trim().replace(/^["']|["']$/g, '');
+    return value || null;
+}
+
+function renderIndexWithFrontmatter(text, fm, hubTitles, tags, formatValue) {
     const lines = text.split(/\r?\n/);
     if (!fm) {
         const front = [
             '---',
             `tags: [${tags.map(quote).join(', ')}]`,
+            `format: ${formatValue}`,
             'publication:',
             `hubs: [${hubTitles.map(quote).join(', ')}]`,
             '---',
@@ -726,15 +859,23 @@ function renderIndexWithFrontmatter(text, fm, hubTitles, tags) {
     }
 
     const fmLines = [...fm.lines];
-    const replaceOrInsert = (key, rendered) => {
+    const replaceOrInsert = (key, rendered, afterKey = null) => {
         const idx = fmLines.findIndex((l) => new RegExp(`^${key}\\s*:`).test(l));
         if (idx >= 0) {
             fmLines[idx] = rendered;
-        } else {
-            fmLines.push(rendered);
+            return;
         }
+        if (afterKey) {
+            const afterIdx = fmLines.findIndex((l) => new RegExp(`^${afterKey}\\s*:`).test(l));
+            if (afterIdx >= 0) {
+                fmLines.splice(afterIdx + 1, 0, rendered);
+                return;
+            }
+        }
+        fmLines.push(rendered);
     };
     replaceOrInsert('tags', `tags: [${tags.map(quote).join(', ')}]`);
+    replaceOrInsert('format', `format: ${formatValue}`, 'tags');
     replaceOrInsert('hubs', `hubs: [${hubTitles.map(quote).join(', ')}]`);
 
     const before = lines.slice(0, fm.startLine);
@@ -773,7 +914,7 @@ function truncate(text, max) {
 function nextStep(ctx, action) {
     if (!ctx.slug) return { recommendation: 'Provide article slug.' };
     if (!ctx.articleExists) return { recommendation: labels(ctx.language).notReady };
-    if (action === 'status') return { recommendation: 'Run habr-resume.mjs to start or continue the hubs/tags dialogue.' };
+    if (action === 'status') return { recommendation: 'Run habr-resume.mjs to start or continue the format/hubs/tags dialogue.' };
     return { recommendation: 'Run habr-answer.mjs to save the next selection, then habr-apply.mjs.' };
 }
 
@@ -913,8 +1054,8 @@ function normalizeLanguage(value) {
 
 function normalizeField(value) {
     const field = String(value).trim().toLowerCase();
-    if (field !== 'hubs' && field !== 'tags') {
-        throw new Error(`--field must be one of hubs, tags (got: ${value})`);
+    if (field !== 'format' && field !== 'hubs' && field !== 'tags') {
+        throw new Error(`--field must be one of format, hubs, tags (got: ${value})`);
     }
     return field;
 }

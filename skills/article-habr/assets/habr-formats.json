@@ -1,0 +1,57 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/schemas/habr-formats.schema.json",
+  "source": "habr.com publication form format radio group",
+  "fetchedAt": "2026-07-09",
+  "note": "Habr article format options from the publication form. value is the radio input value; titles are the UI labels.",
+  "formatCount": 12,
+  "formats": [
+    {
+      "value": "common",
+      "title": { "ru": "Не указан", "en": "Not specified" }
+    },
+    {
+      "value": "case",
+      "title": { "ru": "Кейс", "en": "Case study" }
+    },
+    {
+      "value": "tutorial",
+      "title": { "ru": "Туториал", "en": "Tutorial" }
+    },
+    {
+      "value": "roadmap",
+      "title": { "ru": "Роадмэп", "en": "Roadmap" }
+    },
+    {
+      "value": "retrospective",
+      "title": { "ru": "Ретроспектива", "en": "Retrospective" }
+    },
+    {
+      "value": "review",
+      "title": { "ru": "Обзор", "en": "Review" }
+    },
+    {
+      "value": "opinion",
+      "title": { "ru": "Мнение", "en": "Opinion" }
+    },
+    {
+      "value": "faq",
+      "title": { "ru": "FAQ", "en": "FAQ" }
+    },
+    {
+      "value": "interview",
+      "title": { "ru": "Интервью", "en": "Interview" }
+    },
+    {
+      "value": "digest",
+      "title": { "ru": "Дайджест", "en": "Digest" }
+    },
+    {
+      "value": "reportage",
+      "title": { "ru": "Репортаж", "en": "Reportage" }
+    },
+    {
+      "value": "analytics",
+      "title": { "ru": "Аналитика", "en": "Analytics" }
+    }
+  ]
+}

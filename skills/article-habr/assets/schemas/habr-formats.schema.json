@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/schemas/habr-formats.schema.json",
+  "title": "Article Habr Formats Registry",
+  "description": "Static registry of Habr publication formats from the publication form radio group. The article-habr skill validates the selected format against this list.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["source", "fetchedAt", "formatCount", "formats"],
+  "properties": {
+    "source": { "type": "string" },
+    "fetchedAt": { "type": "string" },
+    "note": { "type": "string" },
+    "formatCount": { "type": "integer" },
+    "formats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["value", "title"],
+        "properties": {
+          "value": {
+            "type": "string",
+            "enum": [
+              "common",
+              "case",
+              "tutorial",
+              "roadmap",
+              "retrospective",
+              "review",
+              "opinion",
+              "faq",
+              "interview",
+              "digest",
+              "reportage",
+              "analytics"
+            ]
+          },
+          "title": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["ru", "en"],
+            "properties": {
+              "ru": { "type": "string", "minLength": 1 },
+              "en": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

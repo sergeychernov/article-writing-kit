@@ -1,5 +1,6 @@
 ---
 tags: []
+format: common
 publication:
 hubs: []
 ---

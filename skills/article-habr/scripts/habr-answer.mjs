@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-// article-habr: save a hubs or tags selection into habr state.
+// article-habr: save a format, hubs or tags selection into habr state.
 //
 // Usage:
+//   node <SKILL_DIR>/scripts/habr-answer.mjs --target . --slug my-article --field format --value tutorial --json
 //   node <SKILL_DIR>/scripts/habr-answer.mjs --target . --slug my-article --field hubs --value "Linux, Python, *nix" --json
 //   node <SKILL_DIR>/scripts/habr-answer.mjs --target . --slug my-article --field tags --value "python, linux, vpn" --json
 
