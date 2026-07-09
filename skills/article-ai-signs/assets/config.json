@@ -1,0 +1,47 @@
+{
+  "note": "Thresholds for structural heuristics. Counts are per file unless stated. Tune here rather than in code.",
+  "scan": {
+    "snippetMaxLength": 200,
+    "maxMatchesPerMarker": 50
+  },
+  "emDashSpaced": {
+    "minCount": 3
+  },
+  "curlyQuotes": {
+    "minCount": 4
+  },
+  "boldOveruse": {
+    "minBoldSpansPerFile": 8,
+    "minBoldSpansPerParagraph": 3
+  },
+  "inlineHeaderList": {
+    "minItems": 3
+  },
+  "titleCaseHeading": {
+    "minHeadings": 2,
+    "minMainWords": 3,
+    "note": "English-only: a heading where (nearly) all main words are capitalized."
+  },
+  "smallTable": {
+    "maxDataRows": 4,
+    "maxColumns": 2,
+    "note": "Small tables that could be prose/infobox; heuristic, low confidence."
+  },
+  "emojiFormatting": {
+    "minCount": 1
+  },
+  "thematicBreakBeforeHeading": {
+    "minCount": 1
+  },
+  "ruleOfThree": {
+    "minCount": 3,
+    "note": "Low-confidence: 'X, Y, and Z' / 'X, Y и Z' triples."
+  },
+  "bookCiteNoPage": {
+    "note": "Heuristic: a line that looks like a book citation (ISBN present) but has no page number and no URL."
+  },
+  "scoring": {
+    "note": "heuristicScore = min(100, round(100 * (1 - exp(-sum(weight*hits)/scale)))). Not a verdict.",
+    "scale": 20
+  }
+}

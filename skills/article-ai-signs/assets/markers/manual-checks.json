@@ -1,0 +1,109 @@
+{
+  "note": "Markers from Wikipedia:Signs of AI writing that require semantic judgement, edit history, or network access and are NOT auto-detected. The skill lists them so the agent/author can review them manually.",
+  "manualChecks": [
+    {
+      "id": "content.undue-emphasis",
+      "category": "language",
+      "title": "Undue emphasis on significance, legacy, and broader trends",
+      "wpShortcut": "WP:AIEMPHASIS",
+      "why": "Requires reading for meaning: puffery about importance/legacy/broader context.",
+      "hint": "Look for sentences that inflate significance or tie the subject to sweeping trends without sources."
+    },
+    {
+      "id": "content.superficial-analysis",
+      "category": "language",
+      "title": "Superficial analyses",
+      "wpShortcut": "WP:AISUPERFICIAL",
+      "why": "Needs judgement about depth and substance of claims.",
+      "hint": "Analysis that sounds comprehensive but says little concrete; often paired with rule of three."
+    },
+    {
+      "id": "content.promotional",
+      "category": "language",
+      "title": "Promotional tone beyond the flagged phrases",
+      "wpShortcut": "WP:AIPROMO",
+      "why": "Concrete phrases are auto-flagged (language.promotional); overall tone still needs judgement.",
+      "hint": "Unsourced superlatives, brochure tone, puffery not captured by phrase markers."
+    },
+    {
+      "id": "content.vague-attribution",
+      "category": "language",
+      "title": "Unsupported attributions beyond the flagged phrases",
+      "wpShortcut": "WP:AIVAGUE",
+      "why": "Phrases like 'по словам экспертов' are auto-flagged (language.vague-attribution); verifying the source needs judgement.",
+      "hint": "Check whether 'critics say' / 'experts argue' are actually supported by the cited source."
+    },
+    {
+      "id": "language.negative-parallelism",
+      "category": "language",
+      "title": "Negative parallelisms (not just X but Y / not X but Y / X rather than Y)",
+      "wpShortcut": "WP:AIPARALLEL",
+      "why": "Reliable detection needs semantic parsing; auto-regex is too noisy.",
+      "hint": "Watch for 'not only ... but also', 'it's not ..., it's ...', 'X rather than Y'."
+    },
+    {
+      "id": "language.rule-of-three",
+      "category": "language",
+      "title": "Rule of three",
+      "wpShortcut": "WP:RO3",
+      "why": "Common in human writing too; needs judgement in context.",
+      "hint": "Triads of adjectives/phrases used to sound comprehensive."
+    },
+    {
+      "id": "language.elegant-variation",
+      "category": "language",
+      "title": "Lexical diversity / elegant variation",
+      "wpShortcut": "WP:AIELEVAR",
+      "why": "Needs judgement; non-native writers also avoid repetition.",
+      "hint": "Synonyms swapped in to avoid repeating a key term."
+    },
+    {
+      "id": "citations.broken-links",
+      "category": "citations",
+      "title": "Broken external links",
+      "wpShortcut": "WP:AIFICTREF",
+      "why": "Requires network access to verify each URL.",
+      "hint": "Several dead links not found in the Internet Archive are a strong sign."
+    },
+    {
+      "id": "citations.doi-unrelated",
+      "category": "citations",
+      "title": "Invalid DOIs or DOIs leading to unrelated articles",
+      "wpShortcut": "WP:AIFICTREF",
+      "why": "Requires resolving DOIs online.",
+      "hint": "Plausible-looking DOI that resolves to an unrelated paper."
+    },
+    {
+      "id": "citations.book-unverifiable",
+      "category": "citations",
+      "title": "Book citations that do not verify the text",
+      "wpShortcut": "WP:AIFICTREF",
+      "why": "Requires checking the cited pages against the source.",
+      "hint": "General book cited without URL where the cited page does not support the claim."
+    },
+    {
+      "id": "markup.nonexistent-category-template",
+      "category": "markup",
+      "title": "Non-existent categories or templates",
+      "wpShortcut": "WP:AIREDCAT",
+      "why": "Requires checking existence against a wiki.",
+      "hint": "Hallucinated categories/infoboxes appearing as red links (Wikipedia-specific)."
+    },
+    {
+      "id": "markup.broken-wikitext",
+      "category": "markup",
+      "title": "Broken wikitext / garbled templates",
+      "wpShortcut": "WP:AIMARKDOWN",
+      "why": "Wikitext-specific; not relevant to Markdown/Obsidian articles.",
+      "hint": "Garbled AfC submission templates or mangled category timestamps."
+    },
+    {
+      "id": "misc.style-shift",
+      "category": "language",
+      "title": "Pronounced shift in writing style",
+      "wpShortcut": "WP:AISHIFT",
+      "why": "Requires edit history / diff comparison.",
+      "hint": "A section that suddenly reads very differently from the author's usual voice."
+    }
+  ]
+}

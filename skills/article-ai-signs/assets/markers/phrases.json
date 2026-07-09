@@ -1,0 +1,351 @@
+{
+  "sources": {
+    "en": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing",
+    "ru": "https://ru.wikipedia.org/wiki/Википедия:Признаки_сгенерированности_текста"
+  },
+  "groups": [
+    {
+      "id": "language.copulative-avoidance",
+      "category": "language",
+      "title": "Avoidance of basic copulatives (is/are)",
+      "wpShortcut": "WP:AICOPULA",
+      "severity": "low",
+      "weight": 1,
+      "note": "LLMs replace simple 'is/are' with marketing-like verbs (serves as, boasts, features). Weak on its own; do not confuse with past perfect (has been featured).",
+      "matchType": "phrase",
+      "languages": {
+        "en": [
+          "serves as a",
+          "serves as the",
+          "stands as a",
+          "stands as the",
+          "boasts a",
+          "boasts an",
+          "features a",
+          "offers a",
+          "represents a",
+          "represents the",
+          "refers to the"
+        ],
+        "ru": [
+          "служит",
+          "служит краеугольным камнем",
+          "выступает в роли",
+          "выступает в качестве",
+          "выступает символом",
+          "представляет собой",
+          "является воплощением",
+          "является напоминанием",
+          "служит напоминанием",
+          "играет роль",
+          "относится к числу"
+        ]
+      }
+    },
+    {
+      "id": "communication.collaborative",
+      "category": "communication",
+      "title": "Collaborative communication meant for the user",
+      "wpShortcut": "WP:COLLABCOMM",
+      "severity": "high",
+      "weight": 5,
+      "note": "Chatbot correspondence/advice pasted into the article. Strong tell.",
+      "matchType": "phrase",
+      "languages": {
+        "en": [
+          "i hope this helps",
+          "of course!",
+          "certainly!",
+          "you're absolutely right",
+          "you are absolutely right",
+          "would you like me to",
+          "would you like",
+          "is there anything else",
+          "let me know if",
+          "here is a more detailed breakdown",
+          "here's a more detailed breakdown",
+          "as an ai language model",
+          "as a large language model",
+          "i can help you",
+          "sure! here",
+          "great question"
+        ],
+        "ru": [
+          "надеюсь, это поможет",
+          "надеюсь, это помогло",
+          "я надеюсь, это помогло вам",
+          "конечно!",
+          "конечно, вот",
+          "разумеется!",
+          "вы абсолютно правы",
+          "вы совершенно правы",
+          "хотите, я",
+          "хотите, чтобы я",
+          "если хотите, чтобы статья",
+          "если у вас есть ещё вопросы",
+          "если у вас остались вопросы",
+          "дайте знать, если",
+          "дайте мне знать",
+          "сообщите мне, если",
+          "более подробный анализ",
+          "как языковая модель",
+          "как большая языковая модель",
+          "я могу помочь вам",
+          "вот более подробный разбор",
+          "отличный вопрос"
+        ]
+      }
+    },
+    {
+      "id": "communication.knowledge-cutoff",
+      "category": "communication",
+      "title": "Knowledge-cutoff disclaimers and speculation about gaps",
+      "wpShortcut": "WP:AICUTOFF",
+      "severity": "high",
+      "weight": 5,
+      "note": "Statements that info is incomplete/unavailable, often paired with speculation. Strong tell.",
+      "matchType": "phrase",
+      "languages": {
+        "en": [
+          "as of my last knowledge update",
+          "up to my last training update",
+          "as of my last update",
+          "my knowledge cutoff",
+          "knowledge cut-off",
+          "while specific details are limited",
+          "while specific information about",
+          "are not widely documented",
+          "is not widely documented",
+          "not widely available",
+          "in the provided search results",
+          "in the available sources",
+          "based on available information",
+          "i don't have specific information",
+          "i do not have specific information",
+          "maintains a low profile",
+          "keeps personal details private"
+        ],
+        "ru": [
+          "на момент моего последнего обновления",
+          "на момент моего обучения",
+          "по состоянию на момент обновления моей базы данных",
+          "по состоянию на моё последнее обновление знаний",
+          "по состоянию на мои последние данные",
+          "мои знания ограничены",
+          "предел моих знаний",
+          "хотя конкретные детали ограничены",
+          "конкретные детали скудны",
+          "хотя точная информация",
+          "хотя подробности",
+          "не задокументированы широко",
+          "не имеет широкого освещения",
+          "не широко доступны",
+          "не задокументировано в доступных источниках",
+          "в предоставленных источниках",
+          "в предоставленных результатах поиска",
+          "в доступных источниках",
+          "в доступных результатах поиска",
+          "на основе доступной информации",
+          "на основе имеющейся информации",
+          "ниже представлен подробный обзор",
+          "у меня нет точной информации",
+          "у меня нет конкретной информации",
+          "предпочитает не афишировать",
+          "ведёт непубличный образ жизни"
+        ]
+      }
+    },
+    {
+      "id": "communication.placeholder-template",
+      "category": "communication",
+      "title": "Phrasal templates and placeholder text",
+      "wpShortcut": "WP:AIPLACEHOLDER",
+      "severity": "high",
+      "weight": 5,
+      "note": "Fill-in-the-blank templates left unfilled by the LLM user.",
+      "matchType": "phrase",
+      "languages": {
+        "en": [
+          "i hope this message finds you well",
+          "[your name]",
+          "[describe the specific",
+          "[link to the revised article]",
+          "[link to source list]",
+          "[entertainer's name]",
+          "[insert",
+          "best regards, [",
+          "please find our revised article"
+        ],
+        "ru": [
+          "[ваше имя]",
+          "[имя артиста]",
+          "[вставьте",
+          "[опишите",
+          "[укажите",
+          "[название",
+          "[ссылка на",
+          "надеюсь, это сообщение застанет вас"
+        ]
+      }
+    },
+    {
+      "id": "language.promotional",
+      "category": "language",
+      "title": "Promotional / advertisement-like language",
+      "wpShortcut": "WP:AIPROMO",
+      "severity": "medium",
+      "weight": 2,
+      "note": "AI struggles to keep a neutral tone, especially around 'cultural heritage'. Concrete brochure-like phrases; still confirm tone by reading.",
+      "matchType": "phrase",
+      "languages": {
+        "en": [
+          "rich cultural heritage",
+          "nestled in the heart of",
+          "in the heart of",
+          "breathtaking",
+          "stunning natural beauty",
+          "must-visit",
+          "boasts a rich",
+          "continues to captivate",
+          "in this article we will explore",
+          "in this article, we will"
+        ],
+        "ru": [
+          "богатым культурным наследием",
+          "богатое культурное наследие",
+          "потрясающая природная красота",
+          "захватывающий дух",
+          "живописные пейзажи",
+          "вековое наследие",
+          "расположенный в самом сердце",
+          "в этой статье мы рассмотрим",
+          "достойным посещения",
+          "достойный посещения",
+          "открывают перед посетителями",
+          "продолжает очаровывать",
+          "не оставит равнодушным"
+        ]
+      }
+    },
+    {
+      "id": "language.didactic-hedge",
+      "category": "language",
+      "title": "Didactic / editorial hedges (it is important to note)",
+      "wpShortcut": "WP:AIDISCLAIMER",
+      "severity": "medium",
+      "weight": 2,
+      "note": "LLMs tell the reader what is 'important to note', disclaiming responsibility.",
+      "matchType": "phrase",
+      "languages": {
+        "en": [
+          "it is important to note",
+          "it's important to note",
+          "it is worth noting",
+          "it should be noted",
+          "it is worth mentioning",
+          "keep in mind that",
+          "it is crucial to note"
+        ],
+        "ru": [
+          "важно отметить",
+          "важно понимать",
+          "необходимо отметить",
+          "критически важно",
+          "крайне важно",
+          "стоит учесть",
+          "стоит запомнить",
+          "стоит отметить",
+          "следует учитывать",
+          "важно помнить",
+          "значения могут варьироваться"
+        ]
+      }
+    },
+    {
+      "id": "language.summary-section",
+      "category": "language",
+      "title": "Formulaic summary / conclusion openers",
+      "wpShortcut": "WP:AICONCLUSION",
+      "severity": "medium",
+      "weight": 2,
+      "note": "AI likes to add a 'Conclusion' paragraph restating the main idea. Bare 'overall'/'в целом' are skipped to limit false positives.",
+      "matchType": "phrase",
+      "languages": {
+        "en": [
+          "in summary",
+          "in conclusion",
+          "to sum up",
+          "to summarize",
+          "all in all"
+        ],
+        "ru": [
+          "вкратце",
+          "в заключение",
+          "подводя итог",
+          "подводя итоги",
+          "таким образом, можно сделать вывод",
+          "таким образом можно сделать вывод"
+        ]
+      }
+    },
+    {
+      "id": "language.challenges-future",
+      "category": "language",
+      "title": "Outline-like challenges and future prospects",
+      "wpShortcut": "WP:AICONCLUSION",
+      "severity": "medium",
+      "weight": 2,
+      "note": "Formulaic 'Despite [positives], [subject] faces challenges... future prospects...' closers.",
+      "matchType": "phrase",
+      "languages": {
+        "en": [
+          "faces several challenges",
+          "faces a number of challenges",
+          "despite these challenges",
+          "future prospects",
+          "poses several challenges"
+        ],
+        "ru": [
+          "сталкивается с рядом проблем",
+          "сталкивается с проблемами",
+          "несмотря на эти проблемы",
+          "несмотря на эти трудности",
+          "несмотря на трудности",
+          "перспективы на будущее",
+          "перспективы развития"
+        ]
+      }
+    },
+    {
+      "id": "language.vague-attribution",
+      "category": "language",
+      "title": "Vague attributions / overgeneralized opinions",
+      "wpShortcut": "WP:AIVAGUE",
+      "severity": "medium",
+      "weight": 2,
+      "note": "Opinions attributed to a vague authority citing one or two sources that may not say it.",
+      "matchType": "phrase",
+      "languages": {
+        "en": [
+          "industry reports",
+          "according to experts",
+          "some critics argue",
+          "analysts note",
+          "experts say",
+          "critics have noted",
+          "it is widely believed"
+        ],
+        "ru": [
+          "отраслевые отчёты",
+          "по словам экспертов",
+          "некоторые критики утверждают",
+          "эксперты отмечают",
+          "аналитики отмечают",
+          "как отмечают эксперты",
+          "некоторые наблюдатели",
+          "принято считать"
+        ]
+      }
+    }
+  ]
+}

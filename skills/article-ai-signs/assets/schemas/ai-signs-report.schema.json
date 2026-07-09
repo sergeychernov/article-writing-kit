@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-ai-signs/assets/schemas/ai-signs-report.schema.json",
+  "title": "article-ai-signs report",
+  "description": "Deterministic AI-writing marker report produced by article-ai-signs. Markers are indicators, not proof of AI authorship.",
+  "type": "object",
+  "required": [
+    "skill",
+    "version",
+    "generatedAt",
+    "target",
+    "language",
+    "files",
+    "summary",
+    "markers",
+    "manualChecks"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "skill": { "const": "article-ai-signs" },
+    "version": { "type": "integer" },
+    "generatedBy": { "type": "string" },
+    "generatedAt": { "type": "string" },
+    "target": { "type": "string" },
+    "slug": { "type": ["string", "null"] },
+    "slugSource": { "type": ["string", "null"] },
+    "language": { "type": "string", "enum": ["ru", "en"] },
+    "scannedLanguages": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "action": { "type": "string" },
+    "out": { "type": ["string", "null"] },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "lines"],
+        "properties": {
+          "path": { "type": "string" },
+          "lines": { "type": "integer" },
+          "bytes": { "type": "integer" }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["totalMarkers", "byCategory", "bySeverity", "heuristicScore"],
+      "properties": {
+        "totalMarkers": { "type": "integer" },
+        "totalMatches": { "type": "integer" },
+        "byCategory": { "type": "object" },
+        "bySeverity": {
+          "type": "object",
+          "properties": {
+            "high": { "type": "integer" },
+            "medium": { "type": "integer" },
+            "low": { "type": "integer" }
+          }
+        },
+        "heuristicScore": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "markers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "category", "title", "severity", "weight", "count", "fixStrategy", "fixHint", "matches"],
+        "properties": {
+          "id": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": ["language", "style", "markup", "citations", "communication"]
+          },
+          "title": { "type": "string" },
+          "wpShortcut": { "type": ["string", "null"] },
+          "severity": { "type": "string", "enum": ["high", "medium", "low"] },
+          "weight": { "type": "number" },
+          "count": { "type": "integer" },
+          "note": { "type": ["string", "null"] },
+          "fixStrategy": {
+            "type": "string",
+            "enum": ["delete", "mechanical", "rephrase", "review"]
+          },
+          "fixHint": { "type": "string" },
+          "matches": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["file", "line", "snippet"],
+              "properties": {
+                "file": { "type": "string" },
+                "line": { "type": "integer" },
+                "column": { "type": ["integer", "null"] },
+                "match": { "type": ["string", "null"] },
+                "snippet": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "fixStrategies": {
+      "type": ["object", "null"],
+      "description": "Legend for fixStrategy values (delete, mechanical, rephrase, review)."
+    },
+    "manualChecks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "why", "fixStrategy"],
+        "properties": {
+          "id": { "type": "string" },
+          "category": { "type": "string" },
+          "title": { "type": "string" },
+          "wpShortcut": { "type": ["string", "null"] },
+          "why": { "type": "string" },
+          "fixStrategy": {
+            "type": "string",
+            "enum": ["review"]
+          },
+          "hint": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}

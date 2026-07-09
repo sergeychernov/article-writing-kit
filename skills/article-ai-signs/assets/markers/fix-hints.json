@@ -1,0 +1,155 @@
+{
+  "note": "Per-marker fix guidance for agents. fixStrategy: delete | mechanical | rephrase | review. Scripts attach these to each marker in the JSON report; the agent proposes edits, does not auto-apply unless the user asks.",
+  "strategies": {
+    "delete": "Удалить совпадение или всё предложение — это артефакт, не часть статьи.",
+    "mechanical": "Детерминированная правка (убрать параметр URL, заменить кавычки и т.п.) без смены смысла.",
+    "rephrase": "Переписать фрагмент своими словами: конкретика вместо штампа, сохранить факт.",
+    "review": "Слабый сигнал — перечитать в контексте; правка не обязательна."
+  },
+  "hints": {
+    "language.ai-vocabulary": {
+      "fixStrategy": "rephrase",
+      "fixHint": "Замените AI-штампы на конкретные формулировки: факты, глаголы «есть/делает», без «ключевой роли», «яркого свидетельства», «в современном мире». Не меняйте одно клише на другое."
+    },
+    "language.copulative-avoidance": {
+      "fixStrategy": "rephrase",
+      "fixHint": "Упростите до «X — это Y» / «X делает Z» вместо «служит», «выступает в роли», «представляет собой», «serves as a»."
+    },
+    "language.promotional": {
+      "fixStrategy": "rephrase",
+      "fixHint": "Уберите брошюрный тон: вместо «богатое наследие», «в самом сердце», «в этой статье мы рассмотрим» — нейтральное описание или конкретный факт."
+    },
+    "language.didactic-hedge": {
+      "fixStrategy": "delete",
+      "fixHint": "Удалите вводную («важно отметить», «стоит учесть») и оставьте только утверждение по сути."
+    },
+    "language.summary-section": {
+      "fixStrategy": "rephrase",
+      "fixHint": "Уберите шаблонное «в заключение» / «подводя итог»; если итог нужен — один короткий абзац без мета-формулировок."
+    },
+    "language.challenges-future": {
+      "fixStrategy": "rephrase",
+      "fixHint": "Разбейте формулу «несмотря на проблемы… перспективы на будущее»: либо конкретные факты, либо уберите раздел-заглушку."
+    },
+    "language.vague-attribution": {
+      "fixStrategy": "rephrase",
+      "fixHint": "Назовите источник («по данным X») или уберите «по словам экспертов» / «некоторые критики утверждают», если опоры нет."
+    },
+    "language.rule-of-three": {
+      "fixStrategy": "review",
+      "fixHint": "Триады «X, Y и Z» сами по себе не ошибка; упростите, если список звучит как декоративный."
+    },
+    "communication.collaborative": {
+      "fixStrategy": "delete",
+      "fixHint": "Удалите целиком — это текст чатбота для пользователя («надеюсь, это поможет», «хотите, я…»), не часть статьи."
+    },
+    "communication.knowledge-cutoff": {
+      "fixStrategy": "delete",
+      "fixHint": "Удалите дисклеймер об ограничении знаний и спекуляции «детали не задокументированы»; замените фактами или уберите абзац."
+    },
+    "communication.placeholder-template": {
+      "fixStrategy": "delete",
+      "fixHint": "Удалите плейсхолдеры `[…]` и незаполненные шаблоны; допишите реальные данные или уберите блок."
+    },
+    "markup.turn0search": {
+      "fixStrategy": "delete",
+      "fixHint": "Удалите `turn0searchN` / `turn0imageN`; вставьте нормальную ссылку или сноску, если источник нужен."
+    },
+    "markup.oaicite": {
+      "fixStrategy": "delete",
+      "fixHint": "Удалите `:contentReference[oaicite:N]` / `oai_citation`; замените на рабочую ссылку или сноску."
+    },
+    "markup.attributable-index": {
+      "fixStrategy": "delete",
+      "fixHint": "Удалите JSON `{\"attribution\":{\"attributableIndex\":…}}` в конце предложения."
+    },
+    "markup.grok-card": {
+      "fixStrategy": "delete",
+      "fixHint": "Удалите теги `grok-card` / `grok_render_citation_card_json`."
+    },
+    "markup.attached-file": {
+      "fixStrategy": "delete",
+      "fixHint": "Удалите `[attached_file:N]` / `[web:N]` в конце предложения."
+    },
+    "markup.cite-marker": {
+      "fixStrategy": "delete",
+      "fixHint": "Удалите `[cite: N]`; оформите цитату в стиле статьи или уберите."
+    },
+    "markup.lenticular-dagger": {
+      "fixStrategy": "delete",
+      "fixHint": "Удалите маркеры вида `【…†L…】` (артефакт DeepSeek)."
+    },
+    "markup.writing-directive": {
+      "fixStrategy": "delete",
+      "fixHint": "Удалите `:::writing{variant=…}` и обёртку директивы чатбота."
+    },
+    "markup.wikitext-codefence": {
+      "fixStrategy": "mechanical",
+      "fixHint": "Уберите ограждение ```wikitext; оставьте обычный Markdown статьи."
+    },
+    "markup.footnote-return-arrow": {
+      "fixStrategy": "delete",
+      "fixHint": "Удалите символ ↩ и артефакты сносок чатбота."
+    },
+    "markup.skip-heading-level": {
+      "fixStrategy": "mechanical",
+      "fixHint": "Выровняйте иерархию заголовков (не пропускайте уровень: после H2 — H3, не H4)."
+    },
+    "citations.utm-source": {
+      "fixStrategy": "mechanical",
+      "fixHint": "Удалите из URL `utm_source=chatgpt.com` / `openai` / `copilot.com` / `referrer=grok.com`."
+    },
+    "citations.access-date-placeholder": {
+      "fixStrategy": "mechanical",
+      "fixHint": "Замените `2025-XX-XX` на реальную дату доступа или уберите поле."
+    },
+    "citations.url-placeholder": {
+      "fixStrategy": "delete",
+      "fixHint": "Замените `INSERT_SOURCE_URL`, `PASTE_…_HERE` на реальный URL или удалите цитату."
+    },
+    "citations.invalid-isbn": {
+      "fixStrategy": "rephrase",
+      "fixHint": "Проверьте ISBN по источнику; исправьте цифру или удалите выдуманную ссылку."
+    },
+    "citations.book-no-page": {
+      "fixStrategy": "rephrase",
+      "fixHint": "Добавьте страницу/URL, подтверждающую цитату, или уберите ссылку на книгу без привязки к тексту."
+    },
+    "citations.unused-named-ref": {
+      "fixStrategy": "mechanical",
+      "fixHint": "Добавьте `<ref name=\"…\"/>` в текст или удалите неиспользуемые определения из `<references>`."
+    },
+    "style.em-dash-spaced": {
+      "fixStrategy": "review",
+      "fixHint": "При желании уберите пробелы вокруг —: `слово—слово` или запятая; слабый сигнал, не трогайте без других маркеров."
+    },
+    "style.curly-quotes": {
+      "fixStrategy": "mechanical",
+      "fixHint": "При необходимости замените «»/“” на прямые `\"`/`'` по стилю репозитория; часто это артефакт копипаста из ChatGPT."
+    },
+    "style.title-case-heading": {
+      "fixStrategy": "mechanical",
+      "fixHint": "В заголовках используйте sentence case: только первое слово и имена с заглавной."
+    },
+    "style.bold-overuse": {
+      "fixStrategy": "rephrase",
+      "fixHint": "Оставьте жирным 0–1 акцент на абзац; уберите механическое выделение каждого термина."
+    },
+    "style.inline-header-list": {
+      "fixStrategy": "rephrase",
+      "fixHint": "Перепишите список прозой или оставьте список без жирных «заголовков:» в каждом пункте."
+    },
+    "style.emoji-formatting": {
+      "fixStrategy": "delete",
+      "fixHint": "Уберите эмодзи из заголовков и буллетов, если это не осознанный стиль автора."
+    },
+    "style.thematic-break-before-heading": {
+      "fixStrategy": "delete",
+      "fixHint": "Удалите `---` / `----` перед заголовком — типичный артефакт Markdown из чатбота."
+    },
+    "style.small-table": {
+      "fixStrategy": "rephrase",
+      "fixHint": "Рассмотрите замену крошечной таблицы на 1–2 предложения прозой, если таблица не несёт данных."
+    }
+  }
+}

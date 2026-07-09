@@ -1,0 +1,170 @@
+{
+  "note": "Regex signatures scanned line-by-line. 'pattern' is a JavaScript regex source; 'flags' are applied per line (the scanner always adds 'g'). Language-independent unless stated.",
+  "signatures": [
+    {
+      "id": "markup.turn0search",
+      "category": "markup",
+      "title": "ChatGPT turn0search/turn0image citation placeholders",
+      "wpShortcut": "WP:TURN0",
+      "severity": "high",
+      "weight": 6,
+      "note": "Placeholder code left when a ChatGPT conversation with links is pasted in. Near-definitive.",
+      "pattern": "turn\\d+(search|image|news|file)\\d+",
+      "flags": "i"
+    },
+    {
+      "id": "markup.oaicite",
+      "category": "markup",
+      "title": "Reference markup bug (contentReference / oaicite / oai_citation)",
+      "wpShortcut": "WP:OAICITE",
+      "severity": "high",
+      "weight": 6,
+      "note": "ChatGPT reference-markup bug in place of links. Near-definitive.",
+      "pattern": "contentReference|oaicite|oai_citation",
+      "flags": "i"
+    },
+    {
+      "id": "markup.attributable-index",
+      "category": "markup",
+      "title": "ChatGPT attribution/attributableIndex JSON blobs",
+      "wpShortcut": "WP:OAICITE",
+      "severity": "high",
+      "weight": 6,
+      "note": "JSON code appended to sentence ends by ChatGPT. Near-definitive.",
+      "pattern": "\\{\\s*[\"\\u201c\\u201d]attribution[\"\\u201c\\u201d]\\s*:\\s*\\{\\s*[\"\\u201c\\u201d]attributableIndex[\"\\u201c\\u201d]",
+      "flags": ""
+    },
+    {
+      "id": "markup.grok-card",
+      "category": "markup",
+      "title": "Grok citation card markup",
+      "wpShortcut": "WP:OAICITE",
+      "severity": "high",
+      "weight": 6,
+      "note": "grok-card / grok_render_citation_card_json artifacts. Near-definitive for Grok.",
+      "pattern": "grok-card|grok_render_citation_card_json",
+      "flags": "i"
+    },
+    {
+      "id": "markup.attached-file",
+      "category": "markup",
+      "title": "Perplexity-style [attached_file:N] / [web:N] markers",
+      "wpShortcut": "WP:OAICITE",
+      "severity": "high",
+      "weight": 5,
+      "note": "Seen at sentence ends; may be Perplexity-specific.",
+      "pattern": "\\[(attached_file|web):\\s*\\d+\\]",
+      "flags": "i"
+    },
+    {
+      "id": "markup.cite-marker",
+      "category": "markup",
+      "title": "Gemini-style [cite: N] markers",
+      "wpShortcut": "WP:OAICITE",
+      "severity": "high",
+      "weight": 5,
+      "note": "[cite: 1] or [cite: 3, 12, 13] style markers copied from Google Gemini.",
+      "pattern": "\\[cite:\\s*\\d+(\\s*,\\s*\\d+)*\\]",
+      "flags": "i"
+    },
+    {
+      "id": "markup.lenticular-dagger",
+      "category": "markup",
+      "title": "DeepSeek lenticular-bracket citation markers",
+      "wpShortcut": "WP:OAICITE",
+      "severity": "high",
+      "weight": 5,
+      "note": "Markup like \u300185\u2020L261-269\u3011, specific to DeepSeek and derivatives.",
+      "pattern": "\\u3010[^\\u3011]*\\u2020[^\\u3011]*\\u3011",
+      "flags": ""
+    },
+    {
+      "id": "markup.writing-directive",
+      "category": "markup",
+      "title": ":::writing{variant=\"document\"} directive",
+      "wpShortcut": "WP:AIMARKDOWN",
+      "severity": "high",
+      "weight": 6,
+      "note": ":::writing{variant=\"document\" id=\"NNNNN\"} markup (also localized variants).",
+      "pattern": ":*\\s*(writing|\\u00e9criture)\\s*\\{\\s*variant[e]?\\s*=",
+      "flags": "i"
+    },
+    {
+      "id": "markup.wikitext-codefence",
+      "category": "markup",
+      "title": "Markdown fenced code block with wikitext",
+      "wpShortcut": "WP:AIMARKDOWN",
+      "severity": "high",
+      "weight": 4,
+      "note": "```wikitext fences indicate copy-paste from a chatbot that mixed Markdown and wikitext.",
+      "pattern": "```+\\s*wikitext",
+      "flags": "i"
+    },
+    {
+      "id": "markup.footnote-return-arrow",
+      "category": "markup",
+      "title": "Footnote return arrows (\u21a9)",
+      "wpShortcut": "WP:AICITESTYLE",
+      "severity": "medium",
+      "weight": 3,
+      "note": "The \u21a9 character is used by some chatbot interfaces to indicate footnotes.",
+      "pattern": "\\u21a9",
+      "flags": ""
+    },
+    {
+      "id": "citations.utm-source",
+      "category": "citations",
+      "title": "AI utm_source / referrer parameters in URLs",
+      "wpShortcut": "WP:AIUTM",
+      "severity": "high",
+      "weight": 6,
+      "note": "utm_source=chatgpt.com|openai|copilot.com or referrer=grok.com. Near-definitively proves a chatbot was involved (not necessarily that it wrote the prose).",
+      "pattern": "utm_source=(chatgpt\\.com|openai|copilot\\.com)|referrer=grok\\.com",
+      "flags": "i"
+    },
+    {
+      "id": "citations.access-date-placeholder",
+      "category": "citations",
+      "title": "Placeholder date in citation (2025-XX-XX)",
+      "wpShortcut": "WP:AIPLACEHOLDER",
+      "severity": "high",
+      "weight": 5,
+      "note": "LLMs insert placeholder dates like 2025-XX-XX into access-date/date fields.",
+      "pattern": "\\b\\d{4}-(XX|xx)-(XX|xx)\\b|\\b\\d{4}-\\d{2}-(XX|xx)\\b",
+      "flags": ""
+    },
+    {
+      "id": "citations.url-placeholder",
+      "category": "citations",
+      "title": "Placeholder URL/source token in citation",
+      "wpShortcut": "WP:AIPLACEHOLDER",
+      "severity": "high",
+      "weight": 5,
+      "note": "Tokens like INSERT_SOURCE_URL, PASTE_..._HERE, SOURCE_PUBLISHER left in citations.",
+      "pattern": "INSERT_[A-Z_]*URL[A-Z0-9_]*|PASTE_[A-Z0-9_]*(URL|HERE)|SOURCE_PUBLISHER|INSERT_SOURCE",
+      "flags": ""
+    },
+    {
+      "id": "style.em-dash-spaced",
+      "category": "style",
+      "title": "Spaced em dashes",
+      "wpShortcut": "WP:AIDASH",
+      "severity": "low",
+      "weight": 1,
+      "note": "AI em dashes are usually surrounded by spaces, contrary to typographic norms. Weak on its own; strongest combined with other signs.",
+      "pattern": "\\s\\u2014\\s",
+      "flags": ""
+    },
+    {
+      "id": "style.curly-quotes",
+      "category": "style",
+      "title": "Curly quotation marks / apostrophes",
+      "wpShortcut": "WP:AICURLY",
+      "severity": "low",
+      "weight": 1,
+      "note": "ChatGPT/DeepSeek use curly quotes. Weak: smart-quote features, macOS/iOS, Word, and typeset works also produce these; Gemini/Claude usually do not.",
+      "pattern": "[\\u201c\\u201d\\u2018\\u2019]",
+      "flags": ""
+    }
+  ]
+}
