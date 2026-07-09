@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/schemas/habr-audiences.schema.json",
+  "source": "habr.com publication form target audience options",
+  "fetchedAt": "2026-07-09",
+  "note": "Habr target audience options from the publication form. title.ru is the exact UI label; alias is a stable matching key.",
+  "limits": { "maxAudiences": 5 },
+  "audienceCount": 21,
+  "audiences": [
+    { "alias": "backend", "title": { "ru": "Бэкенд", "en": "Backend" } },
+    { "alias": "frontend", "title": { "ru": "Фронтенд", "en": "Frontend" } },
+    { "alias": "mobile", "title": { "ru": "Мобильная разработка", "en": "Mobile development" } },
+    { "alias": "sysadmin", "title": { "ru": "Системное администрирование", "en": "System administration" } },
+    { "alias": "security", "title": { "ru": "Информационная безопасность", "en": "Information security" } },
+    { "alias": "ai-ml", "title": { "ru": "AI и ML", "en": "AI and ML" } },
+    { "alias": "industrial", "title": { "ru": "Промышленная инженерия", "en": "Industrial engineering" } },
+    { "alias": "gamedev", "title": { "ru": "Геймдев", "en": "Game development" } },
+    { "alias": "testing", "title": { "ru": "Тестирование", "en": "Testing" } },
+    { "alias": "support", "title": { "ru": "Техническая поддержка", "en": "Technical support" } },
+    { "alias": "analysis", "title": { "ru": "Системный и бизнес-анализ", "en": "Systems and business analysis" } },
+    { "alias": "design", "title": { "ru": "Дизайн", "en": "Design" } },
+    { "alias": "management", "title": { "ru": "Менеджмент", "en": "Management" } },
+    { "alias": "top-management", "title": { "ru": "Топ-менеджмент", "en": "Top management" } },
+    { "alias": "marketing", "title": { "ru": "Маркетинг и контент", "en": "Marketing and content" } },
+    { "alias": "hr", "title": { "ru": "HR", "en": "HR" } },
+    { "alias": "hardware", "title": { "ru": "Железо и гаджеты", "en": "Hardware and gadgets" } },
+    { "alias": "diy", "title": { "ru": "DIY", "en": "DIY" } },
+    { "alias": "health", "title": { "ru": "Здоровье", "en": "Health" } },
+    { "alias": "science", "title": { "ru": "Научпоп", "en": "Popular science" } },
+    { "alias": "other", "title": { "ru": "Другое", "en": "Other" } }
+  ]
+}

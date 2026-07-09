@@ -17,9 +17,12 @@ export const HUBS_REGISTRY_URL =
     'https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/habr-hubs.json';
 export const FORMATS_REGISTRY_URL =
     'https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/habr-formats.json';
+export const AUDIENCES_REGISTRY_URL =
+    'https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/habr-audiences.json';
 
 export const DEFAULT_MAX_HUBS = 5;
 export const DEFAULT_MAX_TAGS = 10;
+export const DEFAULT_MAX_AUDIENCES = 5;
 const TAG_MAX_LEN = 64;
 const LEAD_EXCERPT_LEN = 600;
 
@@ -27,29 +30,34 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ASSETS_DIR = join(HERE, '..', 'assets');
 const HUBS_REGISTRY_PATH = join(ASSETS_DIR, 'habr-hubs.json');
 const FORMATS_REGISTRY_PATH = join(ASSETS_DIR, 'habr-formats.json');
+const AUDIENCES_REGISTRY_PATH = join(ASSETS_DIR, 'habr-audiences.json');
 
 const TEXT = {
     ru: {
         slugQuestion: 'Какой slug статьи подготавливаем для Habr?',
         notReady: 'Сначала заверши article-scaffold и напиши черновики act-*.md файлов.',
-        needsApply: 'Формат, хабы и теги выбраны. Запусти habr-apply.mjs, чтобы записать их в index.md.',
+        needsApply: 'Формат, аудитория, хабы и теги выбраны. Запусти habr-apply.mjs, чтобы записать их в index.md.',
         askFormat: 'Определи формат статьи из списка Habr и спроси подтверждение. Покажи value и русское название.',
+        askAudience: 'Определи целевую аудиторию из списка Habr (до 5) и спроси подтверждение. Покажи alias и русское название.',
         askHubs: 'Предложи до 5 тематических хабов из реестра (prefer multiauthor) и спроси подтверждение. Покажи кандидатов с пометкой, можно ли в них публиковать.',
         askTags: 'Предложи до 10 тегов (lowercase, устоявшиеся на Habr) и спроси подтверждение.',
-        allDone: 'Формат, хабы и теги применены в index.md.',
+        allDone: 'Формат, аудитория, хабы и теги применены в index.md.',
         noFormatSelected: 'Формат ещё не выбран.',
+        noAudienceSelected: 'Аудитория ещё не выбрана.',
         noHubsSelected: 'Хабы ещё не выбраны.',
         noTagsSelected: 'Теги ещё не выбраны.',
     },
     en: {
         slugQuestion: 'Which article slug are we preparing for Habr?',
         notReady: 'Run article-scaffold and draft the act-*.md files first.',
-        needsApply: 'Format, hubs and tags are chosen. Run habr-apply.mjs to write them into index.md.',
+        needsApply: 'Format, audience, hubs and tags are chosen. Run habr-apply.mjs to write them into index.md.',
         askFormat: 'Pick the Habr article format from the registry and ask the user to confirm. Show value and English title.',
+        askAudience: 'Pick the Habr target audience from the registry (up to 5) and ask the user to confirm. Show alias and English title.',
         askHubs: 'Propose up to 5 thematic hubs from the registry (prefer multiauthor) and ask the user to confirm. Mark whether each candidate accepts posts.',
         askTags: 'Propose up to 10 tags (lowercase, established on Habr) and ask the user to confirm.',
-        allDone: 'Format, hubs and tags have been applied to index.md.',
+        allDone: 'Format, audience, hubs and tags have been applied to index.md.',
         noFormatSelected: 'No format selected yet.',
+        noAudienceSelected: 'No audience selected yet.',
         noHubsSelected: 'No hubs selected yet.',
         noTagsSelected: 'No tags selected yet.',
     },
@@ -108,7 +116,7 @@ export function printUsage(command) {
     const extra = {
         'habr-status.mjs': '',
         'habr-resume.mjs': ' [--new]',
-        'habr-answer.mjs': ' --field <format|hubs|tags> --value <value-or-comma-separated>',
+        'habr-answer.mjs': ' --field <format|audience|hubs|tags> --value <value-or-comma-separated>',
         'habr-apply.mjs': ' [--force] [--dry-run]',
     }[command];
 
@@ -122,9 +130,9 @@ Flags:
   --chat-title <t>    Alias for --thread-title
   --language ru|en    Output language when scaffold state cannot provide it
   --new               (resume) ignore saved habr state and start over
-  --field <f>         (answer) format | hubs | tags
-  --value <v>         (answer) format value/title, or comma-separated hubs/tags
-  --force             (apply) overwrite non-empty format/tags/hubs in index.md instead of writing *.new
+  --field <f>         (answer) format | audience | hubs | tags
+  --value <v>         (answer) format value/title, or comma-separated audiences/hubs/tags
+  --force             (apply) overwrite non-empty format/audience/tags/hubs in index.md instead of writing *.new
   --dry-run           Show intended changes without writing files
   --json              Print machine-readable JSON
   --help              Show this help
@@ -143,6 +151,13 @@ export function loadFormatRegistry() {
         throw new Error(`Habr formats registry not found: ${FORMATS_REGISTRY_PATH}`);
     }
     return JSON.parse(readFileSync(FORMATS_REGISTRY_PATH, 'utf8'));
+}
+
+export function loadAudienceRegistry() {
+    if (!existsSync(AUDIENCES_REGISTRY_PATH)) {
+        throw new Error(`Habr audiences registry not found: ${AUDIENCES_REGISTRY_PATH}`);
+    }
+    return JSON.parse(readFileSync(AUDIENCES_REGISTRY_PATH, 'utf8'));
 }
 
 export function buildContext(opts = {}) {
@@ -171,6 +186,7 @@ export function buildContext(opts = {}) {
     const existingState = (opts.new ? null : readJson(statePath)) || null;
     const registry = loadHubRegistry();
     const formatRegistry = loadFormatRegistry();
+    const audienceRegistry = loadAudienceRegistry();
     const title =
         stringOrNull(scaffoldState?.title) ||
         (articleDir ? readTitleFromIndex(indexPath) : null) ||
@@ -211,8 +227,10 @@ export function buildContext(opts = {}) {
         existingState,
         registry,
         formatRegistry,
+        audienceRegistry,
         maxHubs: registry?.limits?.maxHubs ?? DEFAULT_MAX_HUBS,
         maxTags: registry?.limits?.maxTags ?? DEFAULT_MAX_TAGS,
+        maxAudiences: audienceRegistry?.limits?.maxAudiences ?? DEFAULT_MAX_AUDIENCES,
     };
 }
 
@@ -229,6 +247,7 @@ export function createStatusResponse(ctx) {
     const frontmatter = ctx.indexContent ? parseFrontmatter(ctx.indexContent) : null;
     const fmHubs = frontmatter ? readArrayField(frontmatter, 'hubs') : [];
     const fmTags = frontmatter ? readArrayField(frontmatter, 'tags') : [];
+    const fmAudience = frontmatter ? readArrayField(frontmatter, 'audience') : [];
     const fmFormat = frontmatter ? readScalarField(frontmatter, 'format') : null;
 
     return publicContext(ctx, {
@@ -238,15 +257,24 @@ export function createStatusResponse(ctx) {
         ready: Boolean(ctx.slug && ctx.articleExists),
         complete: isApplied(state),
         format: state?.format || null,
+        audiences: state?.audiences || [],
         hubs: state?.hubs || [],
         tags: state?.tags || [],
         maxHubs: ctx.maxHubs,
         maxTags: ctx.maxTags,
+        maxAudiences: ctx.maxAudiences,
         indexFrontmatter: ctx.indexContent
-            ? { present: Boolean(frontmatter), format: fmFormat, hubs: fmHubs, tags: fmTags }
+            ? {
+                  present: Boolean(frontmatter),
+                  format: fmFormat,
+                  audience: fmAudience,
+                  hubs: fmHubs,
+                  tags: fmTags,
+              }
             : null,
         registry: registrySummary(ctx.registry),
         formats: formatsSummary(ctx.formatRegistry, ctx.language),
+        audiencesRegistry: audiencesSummary(ctx.audienceRegistry, ctx.language),
         next: nextStep(ctx, 'status'),
     });
 }
@@ -271,6 +299,19 @@ export function createResumeResponse(ctx) {
 
     const articleContext = buildArticleContext(ctx);
     const formats = formatsSummary(ctx.formatRegistry, ctx.language);
+    const audiencesRegistry = audiencesSummary(ctx.audienceRegistry, ctx.language);
+    const selectionBase = {
+        format: state.format,
+        audiences: state.audiences,
+        hubs: state.hubs,
+        tags: state.tags,
+        maxHubs: ctx.maxHubs,
+        maxTags: ctx.maxTags,
+        maxAudiences: ctx.maxAudiences,
+        articleContext,
+        formats,
+        audiencesRegistry,
+    };
 
     if (!cursor) {
         const applied = isApplied(state);
@@ -279,19 +320,13 @@ export function createResumeResponse(ctx) {
             action: applied ? 'all_done' : 'needs_apply',
             ready: true,
             complete: applied,
-            format: state.format,
-            hubs: state.hubs,
-            tags: state.tags,
-            maxHubs: ctx.maxHubs,
-            maxTags: ctx.maxTags,
             cursor: null,
-            articleContext,
-            formats,
+            ...selectionBase,
             message: applied ? l.allDone : l.needsApply,
             next: {
                 recommendation: applied
-                    ? 'Nothing to do — format, hubs and tags are already applied to index.md.'
-                    : 'Run habr-apply.mjs to write the chosen format, hubs and tags into index.md.',
+                    ? 'Nothing to do — format, audience, hubs and tags are already applied to index.md.'
+                    : 'Run habr-apply.mjs to write the chosen format, audience, hubs and tags into index.md.',
             },
         });
     }
@@ -303,13 +338,7 @@ export function createResumeResponse(ctx) {
             ready: true,
             complete: false,
             cursor,
-            format: state.format,
-            hubs: state.hubs,
-            tags: state.tags,
-            maxHubs: ctx.maxHubs,
-            maxTags: ctx.maxTags,
-            articleContext,
-            formats,
+            ...selectionBase,
             currentQuestion: {
                 id: 'format',
                 kind: 'choice',
@@ -323,6 +352,27 @@ export function createResumeResponse(ctx) {
         });
     }
 
+    if (cursor.phase === 'audience') {
+        return publicContext(ctx, {
+            phase: 'habr',
+            action: 'needs_audience',
+            ready: true,
+            complete: false,
+            cursor,
+            ...selectionBase,
+            currentQuestion: {
+                id: 'audience',
+                kind: 'multi_choice',
+                question: l.askAudience,
+            },
+            instructions: [
+                `Pick up to ${ctx.maxAudiences} audiences from audiencesRegistry.items (alias or localized title).`,
+                'Infer from articleContext (title, lead, brief.audience). Prefer specific audiences over "other".',
+                'Save with habr-answer.mjs --field audience --value "alias1, Title 2, …".',
+            ],
+        });
+    }
+
     if (cursor.phase === 'hubs') {
         return publicContext(ctx, {
             phase: 'habr',
@@ -330,14 +380,8 @@ export function createResumeResponse(ctx) {
             ready: true,
             complete: false,
             cursor,
-            format: state.format,
-            hubs: state.hubs,
-            tags: state.tags,
-            maxHubs: ctx.maxHubs,
-            maxTags: ctx.maxTags,
-            articleContext,
+            ...selectionBase,
             registry: registrySummary(ctx.registry),
-            formats,
             currentQuestion: {
                 id: 'hubs',
                 kind: 'multi_choice',
@@ -357,13 +401,7 @@ export function createResumeResponse(ctx) {
         ready: true,
         complete: false,
         cursor,
-        format: state.format,
-        hubs: state.hubs,
-        tags: state.tags,
-        maxHubs: ctx.maxHubs,
-        maxTags: ctx.maxTags,
-        articleContext,
-        formats,
+        ...selectionBase,
         currentQuestion: {
             id: 'tags',
             kind: 'multi_choice',
@@ -387,7 +425,7 @@ export function saveAnswer(ctx, opts) {
             message: labels(ctx.language).notReady,
         });
     }
-    if (!opts.field) throw new Error('--field is required for habr-answer.mjs (format | hubs | tags)');
+    if (!opts.field) throw new Error('--field is required for habr-answer.mjs (format | audience | hubs | tags)');
     if (opts.value == null) throw new Error('--value is required for habr-answer.mjs');
 
     const state = ctx.existingState || buildInitialState(ctx);
@@ -402,6 +440,30 @@ export function saveAnswer(ctx, opts) {
             throw new Error(`Unknown format: ${opts.value}. Use one of: ${allowed}.`);
         }
         state.format = match;
+    } else if (opts.field === 'audience') {
+        const inputs = splitList(opts.value);
+        const resolved = [];
+        const errors = [];
+        for (const raw of inputs) {
+            const match = matchAudience(raw, ctx.audienceRegistry, ctx.language);
+            if (!match) {
+                errors.push(raw);
+                continue;
+            }
+            if (!resolved.some((a) => a.alias === match.alias)) resolved.push(match);
+        }
+        if (errors.length > 0) {
+            throw new Error(
+                `Unknown audience(s): ${errors.join(', ')}. Use a title or alias from assets/habr-audiences.json.`
+            );
+        }
+        if (resolved.length === 0) {
+            throw new Error('At least one audience is required.');
+        }
+        if (resolved.length > ctx.maxAudiences) {
+            throw new Error(`Too many audiences: ${resolved.length}. Maximum is ${ctx.maxAudiences}.`);
+        }
+        state.audiences = resolved;
     } else if (opts.field === 'hubs') {
         const inputs = splitList(opts.value);
         const resolved = [];
@@ -465,10 +527,12 @@ export function saveAnswer(ctx, opts) {
         complete: isApplied(state),
         field: opts.field,
         format: state.format,
+        audiences: state.audiences,
         hubs: state.hubs,
         tags: state.tags,
         maxHubs: ctx.maxHubs,
         maxTags: ctx.maxTags,
+        maxAudiences: ctx.maxAudiences,
         cursor: state.cursor,
         actions,
     });
@@ -494,6 +558,9 @@ export function applyHabr(ctx, opts) {
     if (!state.format) {
         throw new Error('Format is not selected. Run habr-answer --field format first.');
     }
+    if (!Array.isArray(state.audiences) || state.audiences.length === 0) {
+        throw new Error('Audience is not selected. Run habr-answer --field audience first.');
+    }
     if (state.hubs.length === 0 && state.tags.length === 0) {
         throw new Error('Nothing to apply — hubs and tags are both empty. Run habr-answer first.');
     }
@@ -502,21 +569,32 @@ export function applyHabr(ctx, opts) {
     const fm = parseFrontmatter(indexContent);
     const existingHubs = fm ? readArrayField(fm, 'hubs') : [];
     const existingTags = fm ? readArrayField(fm, 'tags') : [];
+    const existingAudience = fm ? readArrayField(fm, 'audience') : [];
     const existingFormat = fm ? readScalarField(fm, 'format') : null;
 
     const newHubTitles = state.hubs.map((h) => h.title);
     const newTags = state.tags;
+    const newAudienceTitles = state.audiences.map((a) => a.title);
     const newFormat = state.format.value;
 
     const hubsDiff = !shallowEqual(existingHubs, newHubTitles);
     const tagsDiff = !shallowEqual(existingTags, newTags);
+    const audienceDiff = !shallowEqual(existingAudience, newAudienceTitles);
     const formatDiff = existingFormat !== newFormat;
     const hubsOccupied = existingHubs.length > 0 && hubsDiff;
     const tagsOccupied = existingTags.length > 0 && tagsDiff;
+    const audienceOccupied = existingAudience.length > 0 && audienceDiff;
     const formatOccupied = Boolean(existingFormat) && existingFormat !== 'common' && formatDiff;
-    const hasConflict = (hubsOccupied || tagsOccupied || formatOccupied) && !opts.force;
+    const hasConflict = (hubsOccupied || tagsOccupied || audienceOccupied || formatOccupied) && !opts.force;
 
-    const nextContent = renderIndexWithFrontmatter(indexContent, fm, newHubTitles, newTags, newFormat);
+    const nextContent = renderIndexWithFrontmatter(
+        indexContent,
+        fm,
+        newHubTitles,
+        newTags,
+        newFormat,
+        newAudienceTitles,
+    );
     const targetPath = hasConflict ? `${ctx.indexPath}.new` : ctx.indexPath;
 
     const actions = [];
@@ -526,7 +604,7 @@ export function applyHabr(ctx, opts) {
             status: opts.dryRun ? 'would-write-suggestion' : 'suggestion-written',
             conflict: true,
         });
-    } else if (!hubsDiff && !tagsDiff && !formatDiff) {
+    } else if (!hubsDiff && !tagsDiff && !formatDiff && !audienceDiff) {
         actions.push({
             path: rel(ctx.target, ctx.indexPath),
             status: 'unchanged',
@@ -543,7 +621,7 @@ export function applyHabr(ctx, opts) {
     const conflicts = hasConflict ? [rel(ctx.target, ctx.indexPath)] : [];
 
     if (!opts.dryRun) {
-        if (hasConflict || hubsDiff || tagsDiff || formatDiff) {
+        if (hasConflict || hubsDiff || tagsDiff || formatDiff || audienceDiff) {
             writeFileSync(targetPath, nextContent, 'utf8');
         }
         const now = new Date().toISOString();
@@ -562,10 +640,12 @@ export function applyHabr(ctx, opts) {
         force: opts.force,
         dryRun: opts.dryRun,
         format: state.format,
+        audiences: state.audiences,
         hubs: state.hubs,
         tags: state.tags,
         maxHubs: ctx.maxHubs,
         maxTags: ctx.maxTags,
+        maxAudiences: ctx.maxAudiences,
         actions,
         conflicts,
     });
@@ -583,6 +663,7 @@ export function formatStatusHuman(result) {
     const lines = [`Article habr: ${result.slug || 'slug required'}`, `Status: ${result.action}`];
     if (result.currentQuestion) lines.push(`Question: ${result.currentQuestion.question}`);
     lines.push(`Format: ${result.format ? `${result.format.value} (${result.format.title})` : '—'}`);
+    lines.push(`Audience (${result.audiences?.length || 0}/${result.maxAudiences}): ${(result.audiences || []).map((a) => a.title).join(', ') || '—'}`);
     lines.push(`Hubs (${result.hubs?.length || 0}/${result.maxHubs}): ${(result.hubs || []).map((h) => h.title).join(', ') || '—'}`);
     lines.push(`Tags (${result.tags?.length || 0}/${result.maxTags}): ${(result.tags || []).join(', ') || '—'}`);
     if (result.next?.recommendation) lines.push(`Next: ${result.next.recommendation}`);
@@ -594,6 +675,7 @@ export function formatResumeHuman(result) {
     if (result.cursor) lines.push(`Cursor: ${result.cursor.phase}`);
     if (result.articleContext?.title) lines.push(`Title: ${result.articleContext.title}`);
     lines.push(`Format: ${result.format ? `${result.format.value} (${result.format.title})` : '—'}`);
+    lines.push(`Audience: ${(result.audiences || []).map((a) => a.title).join(', ') || '—'}`);
     lines.push(`Hubs: ${(result.hubs || []).map((h) => h.title).join(', ') || '—'}`);
     lines.push(`Tags: ${(result.tags || []).join(', ') || '—'}`);
     if (result.message) lines.push(result.message);
@@ -605,6 +687,8 @@ export function formatAnswerHuman(result) {
     const lines = [`Article habr answer: ${result.slug || 'slug required'}`, `Action: ${result.action}`];
     if (result.field === 'format') {
         lines.push(`Format: ${result.format ? `${result.format.value} (${result.format.title})` : '—'}`);
+    } else if (result.field === 'audience') {
+        lines.push(`Audience: ${(result.audiences || []).map((a) => a.title).join(', ') || '—'}`);
     } else if (result.field === 'hubs') {
         lines.push(`Hubs: ${(result.hubs || []).map((h) => `${h.title}${h.multiauthor ? ' *' : ''}`).join(', ') || '—'}`);
     } else if (result.field === 'tags') {
@@ -651,7 +735,9 @@ function buildInitialState(ctx) {
         articleDir: ctx.slug,
         maxHubs: ctx.maxHubs,
         maxTags: ctx.maxTags,
+        maxAudiences: ctx.maxAudiences,
         format: null,
+        audiences: [],
         hubs: [],
         tags: [],
         cursor: { phase: 'format' },
@@ -662,9 +748,11 @@ function buildInitialState(ctx) {
 function ensureStateShape(ctx, state) {
     if (!Array.isArray(state.hubs)) state.hubs = [];
     if (!Array.isArray(state.tags)) state.tags = [];
+    if (!Array.isArray(state.audiences)) state.audiences = [];
     if (state.format === undefined) state.format = null;
     state.maxHubs = ctx.maxHubs;
     state.maxTags = ctx.maxTags;
+    state.maxAudiences = ctx.maxAudiences;
     state.slug = state.slug || ctx.slug;
     state.title = state.title || ctx.title;
     state.language = normalizeLanguage(state.language || ctx.language);
@@ -682,6 +770,9 @@ function computeCursor(state) {
     if (!state.format) {
         return { phase: 'format' };
     }
+    if (!Array.isArray(state.audiences) || state.audiences.length === 0) {
+        return { phase: 'audience' };
+    }
     if (!Array.isArray(state.hubs) || state.hubs.length === 0) {
         return { phase: 'hubs' };
     }
@@ -692,7 +783,13 @@ function computeCursor(state) {
 }
 
 function isApplied(state) {
-    return Boolean(state?.appliedAt) && Boolean(state?.format) && (state?.hubs?.length > 0 || state?.tags?.length > 0);
+    return (
+        Boolean(state?.appliedAt) &&
+        Boolean(state?.format) &&
+        Array.isArray(state?.audiences) &&
+        state.audiences.length > 0 &&
+        (state?.hubs?.length > 0 || state?.tags?.length > 0)
+    );
 }
 
 function buildArticleContext(ctx) {
@@ -755,6 +852,32 @@ function matchFormat(input, formatRegistry, language) {
     return null;
 }
 
+function matchAudience(input, audienceRegistry, language) {
+    const raw = String(input).trim().toLowerCase();
+    if (!raw) return null;
+    const audiences = Array.isArray(audienceRegistry?.audiences) ? audienceRegistry.audiences : [];
+    const lang = normalizeLanguage(language);
+    const byAlias = audiences.find((a) => a.alias.toLowerCase() === raw);
+    if (byAlias) {
+        return {
+            alias: byAlias.alias,
+            title: byAlias.title?.[lang] || byAlias.title?.ru || byAlias.alias,
+        };
+    }
+    const byTitle = audiences.find((a) => {
+        const ru = String(a.title?.ru || '').toLowerCase();
+        const en = String(a.title?.en || '').toLowerCase();
+        return ru === raw || en === raw;
+    });
+    if (byTitle) {
+        return {
+            alias: byTitle.alias,
+            title: byTitle.title?.[lang] || byTitle.title?.ru || byTitle.alias,
+        };
+    }
+    return null;
+}
+
 function normalizeHubAlias(value) {
     return String(value)
         .trim()
@@ -808,6 +931,24 @@ function formatsSummary(formatRegistry, language) {
     };
 }
 
+function audiencesSummary(audienceRegistry, language) {
+    const lang = normalizeLanguage(language);
+    const items = (Array.isArray(audienceRegistry?.audiences) ? audienceRegistry.audiences : []).map((a) => ({
+        alias: a.alias,
+        title: a.title?.[lang] || a.title?.ru || a.alias,
+        titleRu: a.title?.ru || null,
+        titleEn: a.title?.en || null,
+    }));
+    return {
+        source: audienceRegistry?.source || null,
+        fetchedAt: audienceRegistry?.fetchedAt || null,
+        audienceCount: audienceRegistry?.audienceCount ?? items.length,
+        limits: audienceRegistry?.limits || null,
+        registryPath: AUDIENCES_REGISTRY_PATH,
+        items,
+    };
+}
+
 function parseFrontmatter(text) {
     if (!text) return null;
     const lines = text.split(/\r?\n/);
@@ -843,13 +984,14 @@ function readScalarField(fm, key) {
     return value || null;
 }
 
-function renderIndexWithFrontmatter(text, fm, hubTitles, tags, formatValue) {
+function renderIndexWithFrontmatter(text, fm, hubTitles, tags, formatValue, audienceTitles) {
     const lines = text.split(/\r?\n/);
     if (!fm) {
         const front = [
             '---',
             `tags: [${tags.map(quote).join(', ')}]`,
             `format: ${formatValue}`,
+            `audience: [${audienceTitles.map(quote).join(', ')}]`,
             'publication:',
             `hubs: [${hubTitles.map(quote).join(', ')}]`,
             '---',
@@ -876,6 +1018,7 @@ function renderIndexWithFrontmatter(text, fm, hubTitles, tags, formatValue) {
     };
     replaceOrInsert('tags', `tags: [${tags.map(quote).join(', ')}]`);
     replaceOrInsert('format', `format: ${formatValue}`, 'tags');
+    replaceOrInsert('audience', `audience: [${audienceTitles.map(quote).join(', ')}]`, 'format');
     replaceOrInsert('hubs', `hubs: [${hubTitles.map(quote).join(', ')}]`);
 
     const before = lines.slice(0, fm.startLine);
@@ -914,7 +1057,9 @@ function truncate(text, max) {
 function nextStep(ctx, action) {
     if (!ctx.slug) return { recommendation: 'Provide article slug.' };
     if (!ctx.articleExists) return { recommendation: labels(ctx.language).notReady };
-    if (action === 'status') return { recommendation: 'Run habr-resume.mjs to start or continue the format/hubs/tags dialogue.' };
+    if (action === 'status') {
+        return { recommendation: 'Run habr-resume.mjs to start or continue the format/audience/hubs/tags dialogue.' };
+    }
     return { recommendation: 'Run habr-answer.mjs to save the next selection, then habr-apply.mjs.' };
 }
 
@@ -1054,8 +1199,8 @@ function normalizeLanguage(value) {
 
 function normalizeField(value) {
     const field = String(value).trim().toLowerCase();
-    if (field !== 'format' && field !== 'hubs' && field !== 'tags') {
-        throw new Error(`--field must be one of format, hubs, tags (got: ${value})`);
+    if (field !== 'format' && field !== 'audience' && field !== 'hubs' && field !== 'tags') {
+        throw new Error(`--field must be one of format, audience, hubs, tags (got: ${value})`);
     }
     return field;
 }
