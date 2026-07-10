@@ -28,7 +28,7 @@ flowchart LR
     Architect["article-architect"]
     Draft["draft act-*.md prose"]
     Structure["article-structure"]
-    Habr["article-habr hubs+tags"]
+    Habr["article-habr metadata"]
 
     Init --> Notes
     Init --> Scaffold
@@ -132,7 +132,8 @@ The script applies the first match in this order:
    user to draft prose and return).
 9. Structure ready but not complete → `article-structure`.
 10. Structure complete but Habr metadata not applied → `article-habr` (selects
-    hubs from a bundled registry and tags, then writes them into `index.md`).
+    format, audience, complexity, hubs and tags, then writes them into
+    `index.md`).
 11. Structure and Habr metadata complete → `stage: "done"`, no subagent.
 
 `optionalSubagents` lists `article-notes` for the scaffold/brief/architect

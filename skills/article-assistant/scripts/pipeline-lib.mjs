@@ -40,7 +40,7 @@ const TEXT = {
             architect: 'architecture missing',
             draft: 'act files have no drafted prose yet',
             structure: 'structure labelling pending',
-            habr: 'habr hubs/tags pending',
+            habr: 'habr metadata pending',
             done: 'all stages complete',
         },
         allDone: 'Все этапы пройдены. Статья готова.',
@@ -57,7 +57,7 @@ const TEXT = {
             architect: 'architecture missing',
             draft: 'act files have no drafted prose yet',
             structure: 'structure labelling pending',
-            habr: 'habr hubs/tags pending',
+            habr: 'habr metadata pending',
             done: 'all stages complete',
         },
         allDone: 'All stages complete. The article is ready.',
@@ -357,7 +357,7 @@ function decideRoute(ctx, statusByPhase, l) {
                 recommendedSubagent: SUBAGENTS.habr,
                 optionalSubagents: [],
                 reason: l.routeReason.habr,
-                next: { recommendation: 'Delegate to article-habr to pick Habr hubs and tags.' },
+                next: { recommendation: 'Delegate to article-habr to pick Habr format, audience, complexity, hubs and tags.' },
             };
         }
         return {

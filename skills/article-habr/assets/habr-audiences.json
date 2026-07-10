@@ -2,8 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/schemas/habr-audiences.schema.json",
   "source": "habr.com publication form target audience options",
   "fetchedAt": "2026-07-09",
-  "note": "Habr target audience options from the publication form. title.ru is the exact UI label; alias is a stable matching key.",
-  "limits": { "maxAudiences": 5 },
+  "note": "Habr target audience options from the publication form. Exactly one audience may be selected. title.ru is the exact UI label; alias is a stable matching key.",
   "audienceCount": 21,
   "audiences": [
     { "alias": "backend", "title": { "ru": "Бэкенд", "en": "Backend" } },

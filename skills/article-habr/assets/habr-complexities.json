@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/schemas/habr-complexities.schema.json",
+  "source": "habr.com publication form complexity radio group",
+  "fetchedAt": "2026-07-09",
+  "note": "Habr article complexity options from the publication form. value null is the unlabeled radio (Не указан); low/medium/high match the radio input values.",
+  "complexityCount": 4,
+  "complexities": [
+    {
+      "value": null,
+      "title": { "ru": "Не указан", "en": "Not specified" }
+    },
+    {
+      "value": "low",
+      "title": { "ru": "Простой", "en": "Easy" }
+    },
+    {
+      "value": "medium",
+      "title": { "ru": "Средний", "en": "Medium" }
+    },
+    {
+      "value": "high",
+      "title": { "ru": "Сложный", "en": "Hard" }
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/schemas/habr-complexities.schema.json",
+  "title": "Article Habr Complexities Registry",
+  "description": "Static registry of Habr publication complexity options from the publication form radio group. Exactly one complexity may be selected (including null / Не указан).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["source", "fetchedAt", "complexityCount", "complexities"],
+  "properties": {
+    "source": { "type": "string" },
+    "fetchedAt": { "type": "string" },
+    "note": { "type": "string" },
+    "complexityCount": { "type": "integer" },
+    "complexities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["value", "title"],
+        "properties": {
+          "value": {
+            "oneOf": [
+              { "type": "null" },
+              { "type": "string", "enum": ["low", "medium", "high"] }
+            ]
+          },
+          "title": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["ru", "en"],
+            "properties": {
+              "ru": { "type": "string", "minLength": 1 },
+              "en": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

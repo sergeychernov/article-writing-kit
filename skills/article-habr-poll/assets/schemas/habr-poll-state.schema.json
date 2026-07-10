@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr-poll/assets/schemas/habr-poll-state.schema.json",
+  "title": "Article Habr Poll State",
+  "description": "Recoverable article-habr-poll state written to .article-kit/habr-poll/<slug>.json. Stores an optional poll draft before it is appended to the end of act-3-*.md as a markdown placeholder for the Habr editor (Habr only allows polls at the end of an article).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "version",
+    "generatedBy",
+    "createdAt",
+    "updatedAt",
+    "slug",
+    "title",
+    "language",
+    "articleDir",
+    "wanted",
+    "question",
+    "options",
+    "multiple",
+    "cursor",
+    "appliedAt"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr-poll/assets/schemas/habr-poll-state.schema.json"
+    },
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "version": { "type": "integer", "const": 1 },
+    "generatedBy": { "type": "string", "const": "article-habr-poll" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "title": { "type": ["string", "null"] },
+    "language": { "type": "string", "enum": ["ru", "en"] },
+    "articleDir": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "wanted": { "type": ["boolean", "null"] },
+    "question": { "type": ["string", "null"], "maxLength": 300 },
+    "options": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 120 },
+      "minItems": 0,
+      "maxItems": 10,
+      "uniqueItems": true
+    },
+    "multiple": { "type": ["boolean", "null"] },
+    "cursor": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["phase"],
+          "properties": {
+            "phase": {
+              "type": "string",
+              "enum": ["decision", "question", "options", "multiple"]
+            }
+          }
+        }
+      ]
+    },
+    "appliedAt": { "type": ["string", "null"], "format": "date-time" }
+  }
+}

@@ -19,10 +19,11 @@ export const FORMATS_REGISTRY_URL =
     'https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/habr-formats.json';
 export const AUDIENCES_REGISTRY_URL =
     'https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/habr-audiences.json';
+export const COMPLEXITIES_REGISTRY_URL =
+    'https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/habr-complexities.json';
 
 export const DEFAULT_MAX_HUBS = 5;
 export const DEFAULT_MAX_TAGS = 10;
-export const DEFAULT_MAX_AUDIENCES = 5;
 const TAG_MAX_LEN = 64;
 const LEAD_EXCERPT_LEN = 600;
 
@@ -31,33 +32,38 @@ const ASSETS_DIR = join(HERE, '..', 'assets');
 const HUBS_REGISTRY_PATH = join(ASSETS_DIR, 'habr-hubs.json');
 const FORMATS_REGISTRY_PATH = join(ASSETS_DIR, 'habr-formats.json');
 const AUDIENCES_REGISTRY_PATH = join(ASSETS_DIR, 'habr-audiences.json');
+const COMPLEXITIES_REGISTRY_PATH = join(ASSETS_DIR, 'habr-complexities.json');
 
 const TEXT = {
     ru: {
         slugQuestion: 'Какой slug статьи подготавливаем для Habr?',
         notReady: 'Сначала заверши article-scaffold и напиши черновики act-*.md файлов.',
-        needsApply: 'Формат, аудитория, хабы и теги выбраны. Запусти habr-apply.mjs, чтобы записать их в index.md.',
+        needsApply: 'Формат, аудитория, сложность, хабы и теги выбраны. Запусти habr-apply.mjs, чтобы записать их в index.md.',
         askFormat: 'Определи формат статьи из списка Habr и спроси подтверждение. Покажи value и русское название.',
-        askAudience: 'Определи целевую аудиторию из списка Habr (до 5) и спроси подтверждение. Покажи alias и русское название.',
+        askAudience: 'Определи целевую аудиторию из списка Habr (ровно одну) и спроси подтверждение. Покажи alias и русское название.',
+        askComplexity: 'Определи сложность статьи из списка Habr (ровно одну) и спроси подтверждение. Покажи value и русское название.',
         askHubs: 'Предложи до 5 тематических хабов из реестра (prefer multiauthor) и спроси подтверждение. Покажи кандидатов с пометкой, можно ли в них публиковать.',
         askTags: 'Предложи до 10 тегов (lowercase, устоявшиеся на Habr) и спроси подтверждение.',
-        allDone: 'Формат, аудитория, хабы и теги применены в index.md.',
+        allDone: 'Формат, аудитория, сложность, хабы и теги применены в index.md.',
         noFormatSelected: 'Формат ещё не выбран.',
         noAudienceSelected: 'Аудитория ещё не выбрана.',
+        noComplexitySelected: 'Сложность ещё не выбрана.',
         noHubsSelected: 'Хабы ещё не выбраны.',
         noTagsSelected: 'Теги ещё не выбраны.',
     },
     en: {
         slugQuestion: 'Which article slug are we preparing for Habr?',
         notReady: 'Run article-scaffold and draft the act-*.md files first.',
-        needsApply: 'Format, audience, hubs and tags are chosen. Run habr-apply.mjs to write them into index.md.',
+        needsApply: 'Format, audience, complexity, hubs and tags are chosen. Run habr-apply.mjs to write them into index.md.',
         askFormat: 'Pick the Habr article format from the registry and ask the user to confirm. Show value and English title.',
-        askAudience: 'Pick the Habr target audience from the registry (up to 5) and ask the user to confirm. Show alias and English title.',
+        askAudience: 'Pick exactly one Habr target audience from the registry and ask the user to confirm. Show alias and English title.',
+        askComplexity: 'Pick exactly one Habr complexity from the registry and ask the user to confirm. Show value and English title.',
         askHubs: 'Propose up to 5 thematic hubs from the registry (prefer multiauthor) and ask the user to confirm. Mark whether each candidate accepts posts.',
         askTags: 'Propose up to 10 tags (lowercase, established on Habr) and ask the user to confirm.',
-        allDone: 'Format, audience, hubs and tags have been applied to index.md.',
+        allDone: 'Format, audience, complexity, hubs and tags have been applied to index.md.',
         noFormatSelected: 'No format selected yet.',
         noAudienceSelected: 'No audience selected yet.',
+        noComplexitySelected: 'No complexity selected yet.',
         noHubsSelected: 'No hubs selected yet.',
         noTagsSelected: 'No tags selected yet.',
     },
@@ -116,7 +122,7 @@ export function printUsage(command) {
     const extra = {
         'habr-status.mjs': '',
         'habr-resume.mjs': ' [--new]',
-        'habr-answer.mjs': ' --field <format|audience|hubs|tags> --value <value-or-comma-separated>',
+        'habr-answer.mjs': ' --field <format|audience|complexity|hubs|tags> --value <value-or-comma-separated>',
         'habr-apply.mjs': ' [--force] [--dry-run]',
     }[command];
 
@@ -130,9 +136,9 @@ Flags:
   --chat-title <t>    Alias for --thread-title
   --language ru|en    Output language when scaffold state cannot provide it
   --new               (resume) ignore saved habr state and start over
-  --field <f>         (answer) format | audience | hubs | tags
-  --value <v>         (answer) format value/title, or comma-separated audiences/hubs/tags
-  --force             (apply) overwrite non-empty format/audience/tags/hubs in index.md instead of writing *.new
+  --field <f>         (answer) format | audience | complexity | hubs | tags
+  --value <v>         (answer) format/audience/complexity value or title, or comma-separated hubs/tags
+  --force             (apply) overwrite non-empty format/audience/complexity/tags/hubs in index.md instead of writing *.new
   --dry-run           Show intended changes without writing files
   --json              Print machine-readable JSON
   --help              Show this help
@@ -158,6 +164,13 @@ export function loadAudienceRegistry() {
         throw new Error(`Habr audiences registry not found: ${AUDIENCES_REGISTRY_PATH}`);
     }
     return JSON.parse(readFileSync(AUDIENCES_REGISTRY_PATH, 'utf8'));
+}
+
+export function loadComplexityRegistry() {
+    if (!existsSync(COMPLEXITIES_REGISTRY_PATH)) {
+        throw new Error(`Habr complexities registry not found: ${COMPLEXITIES_REGISTRY_PATH}`);
+    }
+    return JSON.parse(readFileSync(COMPLEXITIES_REGISTRY_PATH, 'utf8'));
 }
 
 export function buildContext(opts = {}) {
@@ -187,6 +200,7 @@ export function buildContext(opts = {}) {
     const registry = loadHubRegistry();
     const formatRegistry = loadFormatRegistry();
     const audienceRegistry = loadAudienceRegistry();
+    const complexityRegistry = loadComplexityRegistry();
     const title =
         stringOrNull(scaffoldState?.title) ||
         (articleDir ? readTitleFromIndex(indexPath) : null) ||
@@ -228,9 +242,9 @@ export function buildContext(opts = {}) {
         registry,
         formatRegistry,
         audienceRegistry,
+        complexityRegistry,
         maxHubs: registry?.limits?.maxHubs ?? DEFAULT_MAX_HUBS,
         maxTags: registry?.limits?.maxTags ?? DEFAULT_MAX_TAGS,
-        maxAudiences: audienceRegistry?.limits?.maxAudiences ?? DEFAULT_MAX_AUDIENCES,
     };
 }
 
@@ -247,8 +261,9 @@ export function createStatusResponse(ctx) {
     const frontmatter = ctx.indexContent ? parseFrontmatter(ctx.indexContent) : null;
     const fmHubs = frontmatter ? readArrayField(frontmatter, 'hubs') : [];
     const fmTags = frontmatter ? readArrayField(frontmatter, 'tags') : [];
-    const fmAudience = frontmatter ? readArrayField(frontmatter, 'audience') : [];
+    const fmAudience = frontmatter ? readScalarField(frontmatter, 'audience') : null;
     const fmFormat = frontmatter ? readScalarField(frontmatter, 'format') : null;
+    const fmComplexity = frontmatter ? readComplexityField(frontmatter) : undefined;
 
     return publicContext(ctx, {
         phase: 'habr',
@@ -257,17 +272,18 @@ export function createStatusResponse(ctx) {
         ready: Boolean(ctx.slug && ctx.articleExists),
         complete: isApplied(state),
         format: state?.format || null,
-        audiences: state?.audiences || [],
+        audience: state?.audience || null,
+        complexity: state?.complexity || null,
         hubs: state?.hubs || [],
         tags: state?.tags || [],
         maxHubs: ctx.maxHubs,
         maxTags: ctx.maxTags,
-        maxAudiences: ctx.maxAudiences,
         indexFrontmatter: ctx.indexContent
             ? {
                   present: Boolean(frontmatter),
                   format: fmFormat,
                   audience: fmAudience,
+                  complexity: fmComplexity,
                   hubs: fmHubs,
                   tags: fmTags,
               }
@@ -275,6 +291,7 @@ export function createStatusResponse(ctx) {
         registry: registrySummary(ctx.registry),
         formats: formatsSummary(ctx.formatRegistry, ctx.language),
         audiencesRegistry: audiencesSummary(ctx.audienceRegistry, ctx.language),
+        complexities: complexitiesSummary(ctx.complexityRegistry, ctx.language),
         next: nextStep(ctx, 'status'),
     });
 }
@@ -300,17 +317,19 @@ export function createResumeResponse(ctx) {
     const articleContext = buildArticleContext(ctx);
     const formats = formatsSummary(ctx.formatRegistry, ctx.language);
     const audiencesRegistry = audiencesSummary(ctx.audienceRegistry, ctx.language);
+    const complexities = complexitiesSummary(ctx.complexityRegistry, ctx.language);
     const selectionBase = {
         format: state.format,
-        audiences: state.audiences,
+        audience: state.audience,
+        complexity: state.complexity,
         hubs: state.hubs,
         tags: state.tags,
         maxHubs: ctx.maxHubs,
         maxTags: ctx.maxTags,
-        maxAudiences: ctx.maxAudiences,
         articleContext,
         formats,
         audiencesRegistry,
+        complexities,
     };
 
     if (!cursor) {
@@ -325,8 +344,8 @@ export function createResumeResponse(ctx) {
             message: applied ? l.allDone : l.needsApply,
             next: {
                 recommendation: applied
-                    ? 'Nothing to do — format, audience, hubs and tags are already applied to index.md.'
-                    : 'Run habr-apply.mjs to write the chosen format, audience, hubs and tags into index.md.',
+                    ? 'Nothing to do — format, audience, complexity, hubs and tags are already applied to index.md.'
+                    : 'Run habr-apply.mjs to write the chosen format, audience, complexity, hubs and tags into index.md.',
             },
         });
     }
@@ -362,13 +381,35 @@ export function createResumeResponse(ctx) {
             ...selectionBase,
             currentQuestion: {
                 id: 'audience',
-                kind: 'multi_choice',
+                kind: 'choice',
                 question: l.askAudience,
             },
             instructions: [
-                `Pick up to ${ctx.maxAudiences} audiences from audiencesRegistry.items (alias or localized title).`,
-                'Infer from articleContext (title, lead, brief.audience). Prefer specific audiences over "other".',
-                'Save with habr-answer.mjs --field audience --value "alias1, Title 2, …".',
+                'Pick exactly one audience from audiencesRegistry.items (alias or localized title).',
+                'Infer from articleContext (title, lead, brief.audience). Prefer a specific audience over "other".',
+                'Save with habr-answer.mjs --field audience --value "<alias-or-title>".',
+            ],
+        });
+    }
+
+    if (cursor.phase === 'complexity') {
+        return publicContext(ctx, {
+            phase: 'habr',
+            action: 'needs_complexity',
+            ready: true,
+            complete: false,
+            cursor,
+            ...selectionBase,
+            currentQuestion: {
+                id: 'complexity',
+                kind: 'choice',
+                question: l.askComplexity,
+            },
+            instructions: [
+                'Pick exactly one complexity from complexities.items (value or localized title).',
+                'Use null / "Не указан" / "Not specified" when complexity should stay unset.',
+                'Infer from articleContext (depth of material, prerequisites). Prefer low/medium/high over null when the level is clear.',
+                'Save with habr-answer.mjs --field complexity --value "<value-or-title>".',
             ],
         });
     }
@@ -425,7 +466,7 @@ export function saveAnswer(ctx, opts) {
             message: labels(ctx.language).notReady,
         });
     }
-    if (!opts.field) throw new Error('--field is required for habr-answer.mjs (format | audience | hubs | tags)');
+    if (!opts.field) throw new Error('--field is required for habr-answer.mjs (format | audience | complexity | hubs | tags)');
     if (opts.value == null) throw new Error('--value is required for habr-answer.mjs');
 
     const state = ctx.existingState || buildInitialState(ctx);
@@ -441,29 +482,23 @@ export function saveAnswer(ctx, opts) {
         }
         state.format = match;
     } else if (opts.field === 'audience') {
-        const inputs = splitList(opts.value);
-        const resolved = [];
-        const errors = [];
-        for (const raw of inputs) {
-            const match = matchAudience(raw, ctx.audienceRegistry, ctx.language);
-            if (!match) {
-                errors.push(raw);
-                continue;
-            }
-            if (!resolved.some((a) => a.alias === match.alias)) resolved.push(match);
+        const match = matchAudience(opts.value, ctx.audienceRegistry, ctx.language);
+        if (!match) {
+            const allowed = (ctx.audienceRegistry?.audiences || [])
+                .map((a) => `${a.alias} (${a.title?.ru || a.title?.en || a.alias})`)
+                .join(', ');
+            throw new Error(`Unknown audience: ${opts.value}. Use one of: ${allowed}.`);
         }
-        if (errors.length > 0) {
-            throw new Error(
-                `Unknown audience(s): ${errors.join(', ')}. Use a title or alias from assets/habr-audiences.json.`
-            );
+        state.audience = match;
+    } else if (opts.field === 'complexity') {
+        const match = matchComplexity(opts.value, ctx.complexityRegistry, ctx.language);
+        if (!match) {
+            const allowed = (ctx.complexityRegistry?.complexities || [])
+                .map((c) => `${complexityValueLabel(c.value)} (${c.title?.ru || c.title?.en || complexityValueLabel(c.value)})`)
+                .join(', ');
+            throw new Error(`Unknown complexity: ${opts.value}. Use one of: ${allowed}.`);
         }
-        if (resolved.length === 0) {
-            throw new Error('At least one audience is required.');
-        }
-        if (resolved.length > ctx.maxAudiences) {
-            throw new Error(`Too many audiences: ${resolved.length}. Maximum is ${ctx.maxAudiences}.`);
-        }
-        state.audiences = resolved;
+        state.complexity = match;
     } else if (opts.field === 'hubs') {
         const inputs = splitList(opts.value);
         const resolved = [];
@@ -527,12 +562,12 @@ export function saveAnswer(ctx, opts) {
         complete: isApplied(state),
         field: opts.field,
         format: state.format,
-        audiences: state.audiences,
+        audience: state.audience,
+        complexity: state.complexity,
         hubs: state.hubs,
         tags: state.tags,
         maxHubs: ctx.maxHubs,
         maxTags: ctx.maxTags,
-        maxAudiences: ctx.maxAudiences,
         cursor: state.cursor,
         actions,
     });
@@ -558,8 +593,11 @@ export function applyHabr(ctx, opts) {
     if (!state.format) {
         throw new Error('Format is not selected. Run habr-answer --field format first.');
     }
-    if (!Array.isArray(state.audiences) || state.audiences.length === 0) {
+    if (!state.audience) {
         throw new Error('Audience is not selected. Run habr-answer --field audience first.');
+    }
+    if (!state.complexity) {
+        throw new Error('Complexity is not selected. Run habr-answer --field complexity first.');
     }
     if (state.hubs.length === 0 && state.tags.length === 0) {
         throw new Error('Nothing to apply — hubs and tags are both empty. Run habr-answer first.');
@@ -569,23 +607,30 @@ export function applyHabr(ctx, opts) {
     const fm = parseFrontmatter(indexContent);
     const existingHubs = fm ? readArrayField(fm, 'hubs') : [];
     const existingTags = fm ? readArrayField(fm, 'tags') : [];
-    const existingAudience = fm ? readArrayField(fm, 'audience') : [];
+    const existingAudience = fm ? readScalarField(fm, 'audience') : null;
     const existingFormat = fm ? readScalarField(fm, 'format') : null;
+    const existingComplexity = fm ? readComplexityField(fm) : undefined;
 
     const newHubTitles = state.hubs.map((h) => h.title);
     const newTags = state.tags;
-    const newAudienceTitles = state.audiences.map((a) => a.title);
+    const newAudienceTitle = state.audience.title;
     const newFormat = state.format.value;
+    const newComplexity = state.complexity.value;
 
     const hubsDiff = !shallowEqual(existingHubs, newHubTitles);
     const tagsDiff = !shallowEqual(existingTags, newTags);
-    const audienceDiff = !shallowEqual(existingAudience, newAudienceTitles);
+    const audienceDiff = existingAudience !== newAudienceTitle;
     const formatDiff = existingFormat !== newFormat;
+    const complexityDiff = existingComplexity !== newComplexity;
     const hubsOccupied = existingHubs.length > 0 && hubsDiff;
     const tagsOccupied = existingTags.length > 0 && tagsDiff;
-    const audienceOccupied = existingAudience.length > 0 && audienceDiff;
+    const audienceOccupied = Boolean(existingAudience) && audienceDiff;
     const formatOccupied = Boolean(existingFormat) && existingFormat !== 'common' && formatDiff;
-    const hasConflict = (hubsOccupied || tagsOccupied || audienceOccupied || formatOccupied) && !opts.force;
+    const complexityOccupied =
+        existingComplexity !== undefined && existingComplexity !== null && complexityDiff;
+    const hasConflict =
+        (hubsOccupied || tagsOccupied || audienceOccupied || formatOccupied || complexityOccupied) &&
+        !opts.force;
 
     const nextContent = renderIndexWithFrontmatter(
         indexContent,
@@ -593,7 +638,8 @@ export function applyHabr(ctx, opts) {
         newHubTitles,
         newTags,
         newFormat,
-        newAudienceTitles,
+        newAudienceTitle,
+        newComplexity,
     );
     const targetPath = hasConflict ? `${ctx.indexPath}.new` : ctx.indexPath;
 
@@ -604,7 +650,7 @@ export function applyHabr(ctx, opts) {
             status: opts.dryRun ? 'would-write-suggestion' : 'suggestion-written',
             conflict: true,
         });
-    } else if (!hubsDiff && !tagsDiff && !formatDiff && !audienceDiff) {
+    } else if (!hubsDiff && !tagsDiff && !formatDiff && !audienceDiff && !complexityDiff) {
         actions.push({
             path: rel(ctx.target, ctx.indexPath),
             status: 'unchanged',
@@ -621,7 +667,7 @@ export function applyHabr(ctx, opts) {
     const conflicts = hasConflict ? [rel(ctx.target, ctx.indexPath)] : [];
 
     if (!opts.dryRun) {
-        if (hasConflict || hubsDiff || tagsDiff || formatDiff || audienceDiff) {
+        if (hasConflict || hubsDiff || tagsDiff || formatDiff || audienceDiff || complexityDiff) {
             writeFileSync(targetPath, nextContent, 'utf8');
         }
         const now = new Date().toISOString();
@@ -640,12 +686,12 @@ export function applyHabr(ctx, opts) {
         force: opts.force,
         dryRun: opts.dryRun,
         format: state.format,
-        audiences: state.audiences,
+        audience: state.audience,
+        complexity: state.complexity,
         hubs: state.hubs,
         tags: state.tags,
         maxHubs: ctx.maxHubs,
         maxTags: ctx.maxTags,
-        maxAudiences: ctx.maxAudiences,
         actions,
         conflicts,
     });
@@ -663,7 +709,8 @@ export function formatStatusHuman(result) {
     const lines = [`Article habr: ${result.slug || 'slug required'}`, `Status: ${result.action}`];
     if (result.currentQuestion) lines.push(`Question: ${result.currentQuestion.question}`);
     lines.push(`Format: ${result.format ? `${result.format.value} (${result.format.title})` : '—'}`);
-    lines.push(`Audience (${result.audiences?.length || 0}/${result.maxAudiences}): ${(result.audiences || []).map((a) => a.title).join(', ') || '—'}`);
+    lines.push(`Audience: ${result.audience ? `${result.audience.alias} (${result.audience.title})` : '—'}`);
+    lines.push(`Complexity: ${formatComplexityHuman(result.complexity)}`);
     lines.push(`Hubs (${result.hubs?.length || 0}/${result.maxHubs}): ${(result.hubs || []).map((h) => h.title).join(', ') || '—'}`);
     lines.push(`Tags (${result.tags?.length || 0}/${result.maxTags}): ${(result.tags || []).join(', ') || '—'}`);
     if (result.next?.recommendation) lines.push(`Next: ${result.next.recommendation}`);
@@ -675,7 +722,8 @@ export function formatResumeHuman(result) {
     if (result.cursor) lines.push(`Cursor: ${result.cursor.phase}`);
     if (result.articleContext?.title) lines.push(`Title: ${result.articleContext.title}`);
     lines.push(`Format: ${result.format ? `${result.format.value} (${result.format.title})` : '—'}`);
-    lines.push(`Audience: ${(result.audiences || []).map((a) => a.title).join(', ') || '—'}`);
+    lines.push(`Audience: ${result.audience ? `${result.audience.alias} (${result.audience.title})` : '—'}`);
+    lines.push(`Complexity: ${formatComplexityHuman(result.complexity)}`);
     lines.push(`Hubs: ${(result.hubs || []).map((h) => h.title).join(', ') || '—'}`);
     lines.push(`Tags: ${(result.tags || []).join(', ') || '—'}`);
     if (result.message) lines.push(result.message);
@@ -688,7 +736,9 @@ export function formatAnswerHuman(result) {
     if (result.field === 'format') {
         lines.push(`Format: ${result.format ? `${result.format.value} (${result.format.title})` : '—'}`);
     } else if (result.field === 'audience') {
-        lines.push(`Audience: ${(result.audiences || []).map((a) => a.title).join(', ') || '—'}`);
+        lines.push(`Audience: ${result.audience ? `${result.audience.alias} (${result.audience.title})` : '—'}`);
+    } else if (result.field === 'complexity') {
+        lines.push(`Complexity: ${formatComplexityHuman(result.complexity)}`);
     } else if (result.field === 'hubs') {
         lines.push(`Hubs: ${(result.hubs || []).map((h) => `${h.title}${h.multiauthor ? ' *' : ''}`).join(', ') || '—'}`);
     } else if (result.field === 'tags') {
@@ -735,9 +785,9 @@ function buildInitialState(ctx) {
         articleDir: ctx.slug,
         maxHubs: ctx.maxHubs,
         maxTags: ctx.maxTags,
-        maxAudiences: ctx.maxAudiences,
         format: null,
-        audiences: [],
+        audience: null,
+        complexity: null,
         hubs: [],
         tags: [],
         cursor: { phase: 'format' },
@@ -748,11 +798,20 @@ function buildInitialState(ctx) {
 function ensureStateShape(ctx, state) {
     if (!Array.isArray(state.hubs)) state.hubs = [];
     if (!Array.isArray(state.tags)) state.tags = [];
-    if (!Array.isArray(state.audiences)) state.audiences = [];
     if (state.format === undefined) state.format = null;
+    if (state.audience === undefined) {
+        // Migrate legacy multi-audience state (audiences[]) to a single audience.
+        if (Array.isArray(state.audiences) && state.audiences.length > 0) {
+            state.audience = state.audiences[0];
+        } else {
+            state.audience = null;
+        }
+    }
+    if (state.complexity === undefined) state.complexity = null;
+    delete state.audiences;
+    delete state.maxAudiences;
     state.maxHubs = ctx.maxHubs;
     state.maxTags = ctx.maxTags;
-    state.maxAudiences = ctx.maxAudiences;
     state.slug = state.slug || ctx.slug;
     state.title = state.title || ctx.title;
     state.language = normalizeLanguage(state.language || ctx.language);
@@ -770,8 +829,11 @@ function computeCursor(state) {
     if (!state.format) {
         return { phase: 'format' };
     }
-    if (!Array.isArray(state.audiences) || state.audiences.length === 0) {
+    if (!state.audience) {
         return { phase: 'audience' };
+    }
+    if (!state.complexity) {
+        return { phase: 'complexity' };
     }
     if (!Array.isArray(state.hubs) || state.hubs.length === 0) {
         return { phase: 'hubs' };
@@ -786,8 +848,8 @@ function isApplied(state) {
     return (
         Boolean(state?.appliedAt) &&
         Boolean(state?.format) &&
-        Array.isArray(state?.audiences) &&
-        state.audiences.length > 0 &&
+        Boolean(state?.audience) &&
+        Boolean(state?.complexity) &&
         (state?.hubs?.length > 0 || state?.tags?.length > 0)
     );
 }
@@ -878,6 +940,47 @@ function matchAudience(input, audienceRegistry, language) {
     return null;
 }
 
+function matchComplexity(input, complexityRegistry, language) {
+    const raw = String(input).trim().toLowerCase();
+    if (!raw) return null;
+    const complexities = Array.isArray(complexityRegistry?.complexities)
+        ? complexityRegistry.complexities
+        : [];
+    const lang = normalizeLanguage(language);
+    const nullAliases = new Set(['null', 'none', 'unset', 'unspecified', 'not-specified', 'not specified']);
+    const byValue = complexities.find((c) => {
+        if (c.value == null) return nullAliases.has(raw);
+        return String(c.value).toLowerCase() === raw;
+    });
+    if (byValue) {
+        return {
+            value: byValue.value ?? null,
+            title: byValue.title?.[lang] || byValue.title?.ru || complexityValueLabel(byValue.value),
+        };
+    }
+    const byTitle = complexities.find((c) => {
+        const ru = String(c.title?.ru || '').toLowerCase();
+        const en = String(c.title?.en || '').toLowerCase();
+        return ru === raw || en === raw;
+    });
+    if (byTitle) {
+        return {
+            value: byTitle.value ?? null,
+            title: byTitle.title?.[lang] || byTitle.title?.ru || complexityValueLabel(byTitle.value),
+        };
+    }
+    return null;
+}
+
+function complexityValueLabel(value) {
+    return value == null ? 'null' : String(value);
+}
+
+function formatComplexityHuman(complexity) {
+    if (!complexity) return '—';
+    return `${complexityValueLabel(complexity.value)} (${complexity.title})`;
+}
+
 function normalizeHubAlias(value) {
     return String(value)
         .trim()
@@ -943,8 +1046,27 @@ function audiencesSummary(audienceRegistry, language) {
         source: audienceRegistry?.source || null,
         fetchedAt: audienceRegistry?.fetchedAt || null,
         audienceCount: audienceRegistry?.audienceCount ?? items.length,
-        limits: audienceRegistry?.limits || null,
         registryPath: AUDIENCES_REGISTRY_PATH,
+        items,
+    };
+}
+
+function complexitiesSummary(complexityRegistry, language) {
+    const lang = normalizeLanguage(language);
+    const items = (Array.isArray(complexityRegistry?.complexities)
+        ? complexityRegistry.complexities
+        : []
+    ).map((c) => ({
+        value: c.value ?? null,
+        title: c.title?.[lang] || c.title?.ru || complexityValueLabel(c.value),
+        titleRu: c.title?.ru || null,
+        titleEn: c.title?.en || null,
+    }));
+    return {
+        source: complexityRegistry?.source || null,
+        fetchedAt: complexityRegistry?.fetchedAt || null,
+        complexityCount: complexityRegistry?.complexityCount ?? items.length,
+        registryPath: COMPLEXITIES_REGISTRY_PATH,
         items,
     };
 }
@@ -984,14 +1106,27 @@ function readScalarField(fm, key) {
     return value || null;
 }
 
-function renderIndexWithFrontmatter(text, fm, hubTitles, tags, formatValue, audienceTitles) {
+/** @returns {string|null|undefined} undefined = field missing; null = explicit null/empty */
+function readComplexityField(fm) {
+    const line = fm.lines.find((l) => /^complexity\s*:/.test(l));
+    if (!line) return undefined;
+    const value = line.slice(line.indexOf(':') + 1).trim().replace(/^["']|["']$/g, '');
+    if (!value || value === 'null' || value === '~') return null;
+    return value;
+}
+
+function renderIndexWithFrontmatter(text, fm, hubTitles, tags, formatValue, audienceTitle, complexityValue) {
     const lines = text.split(/\r?\n/);
+    const audienceLine = `audience: ${quote(audienceTitle)}`;
+    const complexityLine =
+        complexityValue == null ? 'complexity: null' : `complexity: ${complexityValue}`;
     if (!fm) {
         const front = [
             '---',
             `tags: [${tags.map(quote).join(', ')}]`,
             `format: ${formatValue}`,
-            `audience: [${audienceTitles.map(quote).join(', ')}]`,
+            audienceLine,
+            complexityLine,
             'publication:',
             `hubs: [${hubTitles.map(quote).join(', ')}]`,
             '---',
@@ -1018,7 +1153,8 @@ function renderIndexWithFrontmatter(text, fm, hubTitles, tags, formatValue, audi
     };
     replaceOrInsert('tags', `tags: [${tags.map(quote).join(', ')}]`);
     replaceOrInsert('format', `format: ${formatValue}`, 'tags');
-    replaceOrInsert('audience', `audience: [${audienceTitles.map(quote).join(', ')}]`, 'format');
+    replaceOrInsert('audience', audienceLine, 'format');
+    replaceOrInsert('complexity', complexityLine, 'audience');
     replaceOrInsert('hubs', `hubs: [${hubTitles.map(quote).join(', ')}]`);
 
     const before = lines.slice(0, fm.startLine);
@@ -1058,7 +1194,7 @@ function nextStep(ctx, action) {
     if (!ctx.slug) return { recommendation: 'Provide article slug.' };
     if (!ctx.articleExists) return { recommendation: labels(ctx.language).notReady };
     if (action === 'status') {
-        return { recommendation: 'Run habr-resume.mjs to start or continue the format/audience/hubs/tags dialogue.' };
+        return { recommendation: 'Run habr-resume.mjs to start or continue the format/audience/complexity/hubs/tags dialogue.' };
     }
     return { recommendation: 'Run habr-answer.mjs to save the next selection, then habr-apply.mjs.' };
 }
@@ -1199,8 +1335,14 @@ function normalizeLanguage(value) {
 
 function normalizeField(value) {
     const field = String(value).trim().toLowerCase();
-    if (field !== 'format' && field !== 'audience' && field !== 'hubs' && field !== 'tags') {
-        throw new Error(`--field must be one of format, audience, hubs, tags (got: ${value})`);
+    if (
+        field !== 'format' &&
+        field !== 'audience' &&
+        field !== 'complexity' &&
+        field !== 'hubs' &&
+        field !== 'tags'
+    ) {
+        throw new Error(`--field must be one of format, audience, complexity, hubs, tags (got: ${value})`);
     }
     return field;
 }

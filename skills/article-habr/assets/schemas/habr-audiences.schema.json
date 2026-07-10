@@ -2,22 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/sergeychernov/article-writing-kit/main/skills/article-habr/assets/schemas/habr-audiences.schema.json",
   "title": "Article Habr Audiences Registry",
-  "description": "Static registry of Habr target audience options from the publication form. The article-habr skill validates selected audiences against this list.",
+  "description": "Static registry of Habr target audience options from the publication form. Exactly one audience may be selected.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["source", "fetchedAt", "limits", "audienceCount", "audiences"],
+  "required": ["source", "fetchedAt", "audienceCount", "audiences"],
   "properties": {
     "source": { "type": "string" },
     "fetchedAt": { "type": "string" },
     "note": { "type": "string" },
-    "limits": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["maxAudiences"],
-      "properties": {
-        "maxAudiences": { "type": "integer", "minimum": 1 }
-      }
-    },
     "audienceCount": { "type": "integer" },
     "audiences": {
       "type": "array",
